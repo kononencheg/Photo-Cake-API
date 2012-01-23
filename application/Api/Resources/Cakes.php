@@ -32,6 +32,8 @@ class Cakes extends \PhotoCake\Api\Resource\DbResource
         $id = uniqid($prefix);
         $fileName = $id . '.jpg';
 
+        var_dump(Config::get('files.folder'));
+
         if (file_put_contents(Config::get('files.folder') . $fileName, $data)) {
             return Config::get('files.url') . $fileName;
         }
