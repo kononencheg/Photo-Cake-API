@@ -1,0 +1,3 @@
+[submodule "library/PhotoCake"]
+	path = library/PhotoCake
+	url = git@github.com:kononencheg/Photo-Cake-Library.git
