@@ -6,12 +6,16 @@ use Api\Methods\MethodFactory;
 
 use Model\RecordFactory;
 
+use PhotoCake\App\Config;
+
 use PhotoCake\Db\Configuration\ConfigurationManager;
 use PhotoCake\Db\Mongo\MongoConfiguration;
 
 use PhotoCake\Http\Request;
 use PhotoCake\Http\Response\Response;
 use PhotoCake\Http\Response\Format\FormatFactory;
+
+Config::load(INI_FILE);
 
 $config = new MongoConfiguration();
 $config->setDb('cakes');

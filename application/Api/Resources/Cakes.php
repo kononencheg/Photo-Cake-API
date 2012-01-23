@@ -2,6 +2,8 @@
 
 namespace Api\Resources;
 
+use PhotoCake\App\Config;
+
 class Cakes extends \PhotoCake\Api\Resource\DbResource
 {
     /**
@@ -30,8 +32,8 @@ class Cakes extends \PhotoCake\Api\Resource\DbResource
         $id = uniqid($prefix);
         $fileName = $id . '.jpg';
 
-        if (file_put_contents(FILE_FOLDER . $fileName, $data)) {
-            return FILE_URL . $fileName;
+        if (file_put_contents(Config::get('files.folder') . $fileName, $data)) {
+            return Config::get('files.url') . $fileName;
         }
 
         return NULL;
