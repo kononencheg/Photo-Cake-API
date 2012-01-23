@@ -1,3 +1,3 @@
 
 set :branch, "staging"
-set :deploy_to, "/var/www/qa.#{application}"
+set :deploy_to, "/var/www/qa-#{application}"

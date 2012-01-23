@@ -4,7 +4,7 @@ set :default_stage, "staging"
 
 require 'capistrano/ext/multistage'
 
-set :application, "fotonatorte.ru" 
+set :application, "api.fotonatorte.ru"
 
 role :app, "178.250.241.76"
 role :web, "178.250.241.76"
@@ -14,7 +14,7 @@ set :scm, :git
 set :scm_verbose, true
 set :git_enable_submodules, true
 
-set :repository,  "git@github.com:kononencheg/Photo-Cake.git"
+set :repository,  "git@github.com:kononencheg/Photo-Cake-API.git"
 
 default_run_options[:pty] = true
 
