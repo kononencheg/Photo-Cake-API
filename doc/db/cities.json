@@ -1,0 +1,2 @@
+{ "_id" : { "$oid" : "4f1825fb54ae2681adaec757" }, "name" : "Санкт-Петербург", "timezone_offset" : 240 }
+{ "_id" : { "$oid" : "4f18260954ae2681adaec758" }, "name" : "Москва", "timezone_offset" : 240 }
