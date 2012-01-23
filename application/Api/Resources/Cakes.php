@@ -21,6 +21,8 @@ class Cakes extends \PhotoCake\Api\Resource\DbResource
         $cake->markup = json_encode($markup);
         $cake->weight = $markup->dimensions->mass;
 
+        var_dump($photo);
+
         if ($photo !== NULL) {
             $cake->photo_url = $this->saveImage('cake_photo_', $photo);
         }
