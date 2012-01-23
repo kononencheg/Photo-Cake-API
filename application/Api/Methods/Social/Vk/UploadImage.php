@@ -2,7 +2,8 @@
 
 namespace Api\Methods\Social\Vk;
 
-use \PhotoCake\Api\Arguments\Filter;
+use PhotoCake\Api\Arguments\Filter;
+use PhotoCake\App\Config;
 
 class UploadImage extends \PhotoCake\Api\Method\Method
 {
@@ -30,7 +31,9 @@ class UploadImage extends \PhotoCake\Api\Method\Method
      */
     protected function apply()
     {
-        $fileName = FILE_FOLDER . uniqid('temp_cake_image_') . '.jpg';
+        $fileName = Config::get('files.folder') .
+                        uniqid('temp_cake_image_') . '.jpg';
+
         file_put_contents($fileName, $this->image, FILE_BINARY);
 
         $request = curl_init();
