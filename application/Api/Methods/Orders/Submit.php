@@ -18,7 +18,9 @@ class Submit extends \PhotoCake\Api\Method\Method
         'photo' => Filter::BASE64,
         'image' => Filter::BASE64,
         'markup' => Filter::JSON,
+
         'recipe' => Filter::STRING,
+        'bakery_id' => Filter::STRING,
 
         'name' => Filter::STRING,
         'phone' => Filter::PHONE,
@@ -38,9 +40,11 @@ class Submit extends \PhotoCake\Api\Method\Method
     protected function filter()
     {
         $this->applyFilter(array(
-            'image' => array( NULL => 'Ошибка обработки данных торта.' ),
-            'markup' => array( NULL => 'Ошибка обработки данных торта.' ),
-            'recipe' => array( NULL => 'Ошибка обработки данных торта.' ),
+            'image' => array( NULL => 'Ошибка обработки данных.' ),
+            'markup' => array( NULL => 'Ошибка обработки данных.' ),
+
+            'recipe' => array( NULL => 'Ошибка обработки данных.' ),
+            'bakery_id' => array( NULL => 'Ошибка обработки данных.' ),
 
             'name' => array( NULL => 'Имя не задано.' ),
             'phone' => array(
@@ -100,23 +104,30 @@ class Submit extends \PhotoCake\Api\Method\Method
         $recipes = new \Api\Resources\Recipes();
         $deliveries = new \Api\Resources\Deliveries();
 
-        $cake = $cakes->initCake($this->image, $this->photo, $this->markup);
+        $cake = $cakes->initCake($this->param('image'),
+                                 $this->param('photo'),
+                                 $this->param('markup'));
+
         $client = $clients->initClient(
-            $this->email, $this->name, $this->phone,
+            $this->param('email'), $this->param('name'), $this->param('phone'),
             $application->getNetworkName(),
             $application->getNetworkUserId()
         );
 
-        $time = $this->targetDate->getTimestamp() + $this->time;
-        $city = $cities->getById($this->city);
+        $time = $this->targetDate->getTimestamp() + $this->param('time');
+        $city = $cities->getById($this->param('city'));
 
-        $delivery = $deliveries->initDelivery($city, $this->address, $time);
+        $delivery = $deliveries->initDelivery
+            ($city, $this->param('address'), $time);
 
-        $recipe = $recipes->getByName($this->recipe);
-        $payment = $payments->initPayment($this->markup, $recipe, $delivery);
+        $recipe = $recipes->getByName
+            ($this->param('bakery_id'), $this->param('recipe'));
 
-        $order = $orders->initOrder
-            ($cake, $recipe, $client, $delivery, $payment, $this->comment);
+        $payment = $payments->initPayment
+            ($this->param('markup'), $recipe, $delivery);
+
+        $order = $orders->initOrder($cake, $recipe, $client, $delivery,
+                                    $payment, $this->param('comment'));
 
         return $orders->emailOrder($order);
     }

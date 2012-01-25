@@ -9,7 +9,7 @@ class City extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var string
      */
-    protected $collectionName = 'cities';
+    protected $collection = 'cities';
 
     /**
      * @var array

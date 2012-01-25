@@ -1,8 +1,6 @@
 <?php
 
-namespace Api\Methods\Recipes;
-
-use \PhotoCake\Api\Arguments\Filter;
+namespace Api\Methods\Bakeries;
 
 class GetList extends \PhotoCake\Api\Method\Method
 {
@@ -13,9 +11,9 @@ class GetList extends \PhotoCake\Api\Method\Method
     {
         $result = array();
 
-        $recipes = new \Api\Resources\Recipes();
+        $bakeries = new \Api\Resources\Bakeries();
+        $list = $bakeries->getList();
 
-        $list = $recipes->getList($this->param('bakery_id'));
         foreach ($list as $record) {
             array_push($result, $record->jsonSerialize());
         }

@@ -7,7 +7,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var string
      */
-    protected $collectionName = 'orders';
+    protected $collection = 'orders';
 
     /**
      * @var array
@@ -15,10 +15,10 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     protected $fields = array(
         'comment' => 'string',
 
-        'cake'    => '\Model\Cake',
-        'recipe'    => '\Model\Recipe',
-        'client'  => '\Model\Client',
-        'delivery'  => '\Model\Delivery',
+        'cake'     => '\Model\Cake',
+        'recipe'   => '\Model\Recipe',
+        'client'   => '\Model\Client',
+        'delivery' => '\Model\Delivery',
         'payment'  => '\Model\Payment',
     );
 }

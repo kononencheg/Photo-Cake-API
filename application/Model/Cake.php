@@ -9,7 +9,7 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var string
      */
-    protected $collectionName = 'cakes';
+    protected $collection = 'cakes';
 
     /**
      * @var array

@@ -4,17 +4,35 @@ namespace Api\Resources;
 
 class Recipes extends \PhotoCake\Api\Resource\DbResource
 {
+    private $collection = NULL;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->collection = $this->getCollection('recipes');
+    }
+
     /**
      * @param $name
      * @return \PhotoCake\Db\Record\RecordInterface
      */
-    public function getByName($name)
+    public function getByName($bakeryId, $name)
     {
-        return $this->getCollection('recipes')->fetchOne(array('name' => $name));
+        $condition = array(
+            'bakery_id' => $bakeryId,
+            'name' => $name
+        );
+
+        return $this->collection->fetchOne($condition);
     }
 
-    public function getList()
+    public function getList($bakeryId)
     {
-        return $this->getCollection('recipes')->fetchAll();
+        $condition = array(
+            'bakery_id' => $bakeryId
+        );
+
+        return $this->collection->fetchAll($condition);
     }
 }
