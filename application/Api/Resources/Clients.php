@@ -17,11 +17,11 @@ class Clients extends \PhotoCake\Api\Resource\DbResource
         $collection = $this->getCollection('clients');
 
         $client = $collection->createRecord();
-        $client->email = $email;
-        $client->name = $name;
-        $client->phone = $phone;
-        $client->network = $network;
-        $client->network_id = $networkId;
+        $client->set('email', $email);
+        $client->set('name', $name);
+        $client->set('phone', $phone);
+        $client->set('network', $network);
+        $client->set('network_id', $networkId);
 
         return $client;
     }

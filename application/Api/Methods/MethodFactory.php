@@ -21,6 +21,7 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
             case 'recipes.getList': return new Recipes\GetList();
 
             case 'social.vk.uploadImage': return new Social\Vk\UploadImage();
+            case 'social.ok.uploadImage': return new Social\Ok\UploadImage();
 
             case 'utils.base64Echo': return new Utils\Base64Echo();
 

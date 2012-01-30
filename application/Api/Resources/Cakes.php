@@ -7,22 +7,22 @@ use PhotoCake\App\Config;
 class Cakes extends \PhotoCake\Api\Resource\DbResource
 {
     /**
-     * @param string $imageUrl
-     * @param string $photoUrl
-     * @param string $markup
-     * @return \Model\Cake
+     * @param string $image
+     * @param string $photo
+     * @param \stdClass $markup
+     * @return \PhotoCake\Db\Record\RecordInterface
      */
     public function initCake($image, $photo, \stdClass $markup)
     {
         $collection = $this->getCollection('cakes');
 
         $cake = $collection->createRecord();
-        $cake->image_url = $this->saveImage('cake_image_', $image);
-        $cake->markup = json_encode($markup);
-        $cake->weight = $markup->dimensions->mass;
+        $cake->set('image_url', $this->saveImage('cake_image_', $image));
+        $cake->set('markup', json_encode($markup));
+        $cake->set('weight', $markup->dimensions->mass);
 
         if (!empty($photo)) {
-            $cake->photo_url = $this->saveImage('cake_photo_', $photo);
+            $cake->set('photo_url', $this->saveImage('cake_photo_', $photo));
         }
 
         return $cake;

@@ -26,11 +26,14 @@ class Submit extends \PhotoCake\Api\Method\Method
         'phone' => Filter::PHONE,
         'email' => Filter::EMAIL,
 
+        'network' => Filter::STRING,
+        'user_id' => Filter::STRING,
+
         'date' => Filter::STRING,
         'time' => Filter::INTEGER,
-        'city' => Filter::STRING,
         'address' => Filter::STRING,
 
+        'message' => Filter::STRING,
         'comment' => Filter::STRING,
     );
 
@@ -97,12 +100,12 @@ class Submit extends \PhotoCake\Api\Method\Method
         $application = new \Api\Resources\Application();
 
         $cakes = new \Api\Resources\Cakes();
-        $cities = new \Api\Resources\Cities();
         $clients = new \Api\Resources\Clients();
         $orders = new \Api\Resources\Orders();
-        $payments = new \Api\Resources\Payments();
         $recipes = new \Api\Resources\Recipes();
         $deliveries = new \Api\Resources\Deliveries();
+        $bakeries = new \Api\Resources\Bakeries();
+        $payments = new \Api\Resources\Payments();
 
         $cake = $cakes->initCake($this->param('image'),
                                  $this->param('photo'),
@@ -110,24 +113,25 @@ class Submit extends \PhotoCake\Api\Method\Method
 
         $client = $clients->initClient(
             $this->param('email'), $this->param('name'), $this->param('phone'),
-            $application->getNetworkName(),
-            $application->getNetworkUserId()
+            $this->param('network'), $this->param('user_id')
         );
 
         $time = $this->targetDate->getTimestamp() + $this->param('time');
-        $city = $cities->getById($this->param('city'));
+        $bakery = $bakeries->getById($this->param('bakery_id'));
 
         $delivery = $deliveries->initDelivery
-            ($city, $this->param('address'), $time);
+            ($bakery->get('city'), $this->param('address'), $time);
 
         $recipe = $recipes->getByName
             ($this->param('bakery_id'), $this->param('recipe'));
 
         $payment = $payments->initPayment
-            ($this->param('markup'), $recipe, $delivery);
+            ($this->param('markup'), $recipe, $bakery);
 
-        $order = $orders->initOrder($cake, $recipe, $client, $delivery,
-                                    $payment, $this->param('comment'));
+        $order = $orders->initOrder($cake, $recipe, $client, $bakery,
+                                    $payment, $delivery,
+                                    $this->param('comment'),
+                                    $this->param('message'));
 
         return $orders->emailOrder($order);
     }

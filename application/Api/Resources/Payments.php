@@ -7,31 +7,28 @@ class Payments implements \PhotoCake\Api\Resource\ResourceInterface
 {
     public function initPayment(\stdClass $markup,
                                 \Model\Recipe $recipe,
-                                \Model\Delivery $delivery)
+                                \Model\Bakery $bakery)
     {
         $payment = new \Model\Payment();
 
-        $payment->deco_price = $this->getDecorationPrice($markup);
-        $payment->recipe_price = $this->getRecipePrice($markup, $recipe);
-        $payment->delivery_price = $this->getDeliveryPrice($delivery);
+        $decoPrice = $this->getDecorationPrice($markup);
+        $recipePrice = $this->getRecipePrice($markup, $recipe);
+        $deliveryPrice = $bakery->get('delivery_price');
 
-        $payment->total_price = $payment->deco_price +
-                                    $payment->recipe_price +
-                                    $payment->delivery_price;
+        $payment->set('deco_price', $decoPrice);
+        $payment->set('recipe_price', $recipePrice);
+        $payment->set('delivery_price', $deliveryPrice);
+        $payment->set
+            ('total_price', $decoPrice + $recipePrice + $deliveryPrice);
 
-        $payment->payment_type = \Model\Payment::CASH;
+        $payment->set('payment_type', \Model\Payment::CASH);
 
         return $payment;
     }
 
-    private function getDeliveryPrice(\Model\Delivery $delivery)
-    {
-        return 450;
-    }
-
     private function getRecipePrice(\stdClass $markup, \Model\Recipe $recipe)
     {
-        return $recipe->price * $markup->dimensions->mass;
+        return $recipe->get('price') * $markup->dimensions->mass;
     }
 
     private function getDecorationPrice(\stdClass $markup)

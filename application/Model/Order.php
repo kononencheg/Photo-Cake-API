@@ -14,11 +14,13 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
      */
     protected $fields = array(
         'comment' => 'string',
+        'message' => 'string',
 
         'cake'     => '\Model\Cake',
         'recipe'   => '\Model\Recipe',
         'client'   => '\Model\Client',
-        'delivery' => '\Model\Delivery',
+        'bakery'   => '\Model\Bakery',
         'payment'  => '\Model\Payment',
+        'delivery' => '\Model\Delivery',
     );
 }
