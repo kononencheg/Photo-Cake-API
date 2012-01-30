@@ -69,8 +69,6 @@ class UploadImage extends \PhotoCake\Api\Method\Method
 
         $result = curl_exec($request);
 
-        var_dump($result);
-
         curl_close($request);
         unlink($fileName);
 
