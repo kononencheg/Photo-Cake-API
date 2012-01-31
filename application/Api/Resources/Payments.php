@@ -49,41 +49,30 @@ class Payments implements \PhotoCake\Api\Resource\ResourceInterface
     private function getDecorationItemPrice($name)
     {
         switch ($name) {
-            case 'cherry':
-            case 'grape':
-            case 'kiwi':
-            case 'raspberry':
-            case 'strawberry':
-            case 'orange':
-            case 'peach':
-            case 'lemon': return 10;
+            case 'cherry': case 'grape': case 'kiwi': case 'raspberry':
+            case 'strawberry': case 'orange': case 'peach': case 'lemon':
+            case 'blueberry': case 'currant':
+                return 10;
 
-            case 'pig1':
-            case 'car1':
-            case 'hare1':
-            case 'hedgehog1':
-            case 'moose1':
-            case 'owl1':
-            case 'pin1':
-            case 'sheep1':
-            case 'raven1':
-            case 'bear1':
-            case 'car2':
-            case 'car3':
-            case 'mat1': return 250;
+            case 'pig1': case 'car1': case 'hare1': case 'hedgehog1':
+            case 'moose1': case 'owl1': case 'pin1': case 'sheep1':
+            case 'raven1': case 'bear1': case 'car2': case 'car3': case 'mat1':
+            case 'ia': case 'ladybug': case 'pig': case 'rabbit': case 'tiger':
+            case 'winnie': case 'winnie1': case 'bootes':
+                return 250;
 
-            case 'doll1':
-            case 'doll2': return 350;
+            case 'doll1': case 'doll2':
+                return 350;
 
-            case 'flower1':
-            case 'flower2': return 300;
+            case 'flower1': case 'flower2':
+                return 300;
 
-            case 'flower3':
-            case 'flower4':
-            case 'flower5':
-            case 'flower6': return 200;
+            case 'flower3': case 'flower4': case 'flower5': case 'flower6':
+            case 'physalis':
+                return 200;
+
+            default:
+                return 0;
         }
-
-        return 0;
     }
 }
