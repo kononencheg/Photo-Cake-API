@@ -9,7 +9,6 @@ class Delivery extends \PhotoCake\Db\Mongo\MongoRecord
      */
     protected $fields = array(
         'date' => '\MongoDate',
-        'city' => '\Model\City',
         'address' => 'string',
     );
 }

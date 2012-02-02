@@ -15,6 +15,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     protected $fields = array(
         'comment' => 'string',
         'message' => 'string',
+        'campaign' => 'string',
 
         'cake'     => '\Model\Cake',
         'recipe'   => '\Model\Recipe',

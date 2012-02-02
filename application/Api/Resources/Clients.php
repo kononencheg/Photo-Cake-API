@@ -6,13 +6,13 @@ class Clients extends \PhotoCake\Api\Resource\DbResource
 {
     /**
      * @param $email
-     * @param $network
-     * @param $networkId
      * @param $name
      * @param $phone
-     * @return \Model\Client
+     * @param $network
+     * @param $userId
+     * @return \PhotoCake\Db\Record\RecordInterface
      */
-    public function initClient($email, $name, $phone, $network, $networkId)
+    public function createClient($email, $name, $phone, $network, $userId)
     {
         $collection = $this->getCollection('clients');
 
@@ -21,7 +21,7 @@ class Clients extends \PhotoCake\Api\Resource\DbResource
         $client->set('name', $name);
         $client->set('phone', $phone);
         $client->set('network', $network);
-        $client->set('network_id', $networkId);
+        $client->set('user_id', $userId);
 
         return $client;
     }

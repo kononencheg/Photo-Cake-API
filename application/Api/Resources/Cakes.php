@@ -12,7 +12,7 @@ class Cakes extends \PhotoCake\Api\Resource\DbResource
      * @param \stdClass $markup
      * @return \PhotoCake\Db\Record\RecordInterface
      */
-    public function initCake($image, $photo, \stdClass $markup)
+    public function createCake($image, $photo, \stdClass $markup)
     {
         $collection = $this->getCollection('cakes');
 
@@ -24,6 +24,22 @@ class Cakes extends \PhotoCake\Api\Resource\DbResource
         if (!empty($photo)) {
             $cake->set('photo_url', $this->saveImage('cake_photo_', $photo));
         }
+
+        return $cake;
+    }
+
+    /**
+     * @param $imageUrl
+     * @param $weight
+     * @return \PhotoCake\Db\Record\RecordInterface
+     */
+    public function createCampaignCake($imageUrl, $weight)
+    {
+        $collection = $this->getCollection('cakes');
+
+        $cake = $collection->createRecord();
+        $cake->set('image_url', $imageUrl);
+        $cake->set('weight', $weight);
 
         return $cake;
     }

@@ -5,7 +5,21 @@ namespace Api\Resources;
 
 class Payments implements \PhotoCake\Api\Resource\ResourceInterface
 {
-    public function initPayment(\stdClass $markup,
+    public function createCampaignPayment($price)
+    {
+        $payment = new \Model\Payment();
+
+        $payment->set('deco_price', 0);
+        $payment->set('recipe_price', 0);
+        $payment->set('delivery_price', 0);
+        $payment->set('total_price', $price);
+
+        $payment->set('payment_type', \Model\Payment::CASH);
+
+        return $payment;
+    }
+
+    public function createPayment(\stdClass $markup,
                                 \Model\Recipe $recipe,
                                 \Model\Bakery $bakery)
     {

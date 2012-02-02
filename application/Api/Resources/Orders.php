@@ -5,25 +5,140 @@ namespace Api\Resources;
 class Orders extends \PhotoCake\Api\Resource\DbResource
 {
     /**
+     * @var \PhotoCake\Db\Collection\CollectionInterface
+     */
+    private $ordersCollection = NULL;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->ordersCollection = $this->getCollection('orders');
+    }
+
+    /**
+     * @param $image
+     * @param $photo
+     * @param $markup
+     * @param $email
+     * @param $name
+     * @param $phone
+     * @param $network
+     * @param $userId
+     * @param $time
+     * @param $address
+     * @param $bakeryId
+     * @param $recipe
+     * @param $comment
+     * @param $message
+     * @param $campaign
+     * @return \Model\Order
+     */
+    public function submitOrder($image, $photo, $markup,
+                                $email, $name, $phone, $network, $userId,
+                                $time, $address, $bakeryId, $recipe,
+                                $comment, $message, $campaign)
+    {
+        $cakes = new \Api\Resources\Cakes();
+        $clients = new \Api\Resources\Clients();
+        $recipes = new \Api\Resources\Recipes();
+        $deliveries = new \Api\Resources\Deliveries();
+        $bakeries = new \Api\Resources\Bakeries();
+        $payments = new \Api\Resources\Payments();
+
+        $bakery = $bakeries->getById($bakeryId);
+        $recipe = $recipes->getByName($bakeryId, $recipe);
+
+        $cake = $cakes->createCake($image, $photo, $markup);
+        $payment = $payments->createPayment($markup, $recipe, $bakery);
+        $delivery = $deliveries->createDelivery($address, $time);
+        $client = $clients->createClient($email, $name, $phone, $network,
+                                         $userId);
+
+        $order = $this->createOrder($cake, $recipe, $client, $bakery, $payment,
+                                    $delivery, $comment, $message, $campaign);
+
+        $this->saveOrder($order);
+
+        if ($this->emailOrder($order)) {
+            return $order;
+        }
+
+        return NULL;
+    }
+
+    /**
+     * @param $imageUrl
+     * @param $weight
+     * @param $price
+     * @param $time
+     * @param $address
+     * @param $email
+     * @param $name
+     * @param $phone
+     * @param $network
+     * @param $userId
+     * @param $comment
+     * @param $message
+     * @param $campaign
+     * @return \Model\Order
+     */
+    public function submitCampaignOrder($imageUrl, $weight, $price, $time,
+                                        $address, $email, $name, $phone,
+                                        $network, $userId, $comment, $message,
+                                        $campaign)
+    {
+        $cakes = new \Api\Resources\Cakes();
+        $clients = new \Api\Resources\Clients();
+        $deliveries = new \Api\Resources\Deliveries();
+        $payments = new \Api\Resources\Payments();
+
+        $cake = $cakes->createCampaignCake($imageUrl, $weight);
+        $payment = $payments->createCampaignPayment($price);
+        $delivery = $deliveries->createDelivery($address, $time);
+        $client = $clients->createClient($email, $name, $phone, $network,
+                                         $userId);
+
+        $order = $this->createCampaignOrder($cake, $client, $payment, $delivery,
+                                            $comment, $message, $campaign);
+
+        $this->saveOrder($order);
+
+        if ($this->emailOrder($order)) {
+            return $order;
+        }
+
+        return NULL;
+    }
+
+
+    /**
+     * @param \Model\Order $order
+     * @return \PhotoCake\Db\Record\RecordInterface
+     */
+    public function saveOrder(\Model\Order $order)
+    {
+        $this->ordersCollection->update($order);
+    }
+
+    /**
      * @param \Model\Cake $cake
      * @param \Model\Recipe $recipe
      * @param \Model\Client $client
-     * @param \Model\Delivery $delivery
+     * @param \Model\Bakery $bakery
      * @param \Model\Payment $payment
-     * @param string $comment
-     * @return \Model\Order
+     * @param \Model\Delivery $delivery
+     * @param $comment
+     * @param $message
+     * @param $campaign
+     * @return \PhotoCake\Db\Record\RecordInterface
      */
-    public function initOrder(\Model\Cake $cake,
-                              \Model\Recipe $recipe,
-                              \Model\Client $client,
-                              \Model\Bakery $bakery,
-                              \Model\Payment $payment,
-                              \Model\Delivery $delivery,
-                              $comment, $message)
+    public function createOrder(\Model\Cake $cake, \Model\Recipe $recipe,
+                                \Model\Client $client, \Model\Bakery $bakery,
+                                \Model\Payment $payment,
+                                \Model\Delivery $delivery,
+                                $comment, $message, $campaign)
     {
-        $collection = $this->getCollection('orders');
-
-        $order = $collection->createRecord();
+        $order = $this->ordersCollection->createRecord();
         $order->set('cake', $cake);
         $order->set('recipe', $recipe);
         $order->set('client', $client);
@@ -32,68 +147,32 @@ class Orders extends \PhotoCake\Api\Resource\DbResource
 
         $order->set('comment', $comment);
         $order->set('message', $message);
+        $order->set('campaign', $campaign);
 
         $order->set('payment', $payment);
-
-        $collection->update($order);
 
         return $order;
     }
 
-    private function getDecorationPrice(\stdClass $markup)
+
+    public function createCampaignOrder(\Model\Cake $cake,
+                                        \Model\Client $client,
+                                        \Model\Payment $payment,
+                                        \Model\Delivery $delivery,
+                                        $comment, $message, $campaign)
     {
-        $result = 0;
+        $order = $this->ordersCollection->createRecord();
+        $order->set('cake', $cake);
+        $order->set('client', $client);
+        $order->set('delivery', $delivery);
 
-        if (isset($markup->content->deco)) {
-            $deco = $markup->content->deco;
+        $order->set('comment', $comment);
+        $order->set('message', $message);
+        $order->set('campaign', $campaign);
 
-            foreach ($deco as $item) {
-                $result += $this->getDecorationItemPrice($item->name);
-            }
-        }
+        $order->set('payment', $payment);
 
-        return $result;
-    }
-
-    private function getDecorationItemPrice($name)
-    {
-        switch ($name) {
-            case 'cherry':
-            case 'grape':
-            case 'kiwi':
-            case 'raspberry':
-            case 'strawberry':
-            case 'orange':
-            case 'peach':
-            case 'lemon': return 10;
-
-            case 'pig1':
-            case 'car1':
-            case 'hare1':
-            case 'hedgehog1':
-            case 'moose1':
-            case 'owl1':
-            case 'pin1':
-            case 'sheep1':
-            case 'raven1':
-            case 'bear1':
-            case 'car2':
-            case 'car3':
-            case 'mat1': return 250;
-
-            case 'doll1':
-            case 'doll2': return 350;
-
-            case 'flower1':
-            case 'flower2': return 300;
-
-            case 'flower3':
-            case 'flower4':
-            case 'flower5':
-            case 'flower6': return 200;
-        }
-
-        return 0;
+        return $order;
     }
 
     public function emailOrder(\Model\Order $order)
@@ -117,13 +196,16 @@ class Orders extends \PhotoCake\Api\Resource\DbResource
         return mail($to, $subject, $message, $headers);
     }
 
-    private function getMailMarkup(\Model\Order $order) {
+    private function getMailMarkup(\Model\Order $order)
+    {
         $recipe = $order->get('recipe');
         $payment = $order->get('payment');
         $cake = $order->get('cake');
         $client = $order->get('client');
         $delivery = $order->get('delivery');
         $time = $delivery->get('date')->sec;
+
+        $bakery = $order->get('bakery');
 
         return '<html>
             <head>
@@ -140,7 +222,7 @@ class Orders extends \PhotoCake\Api\Resource\DbResource
                 <table><tbody>' .
                     $this->getRow('Ваше имя', $client->get('name')) .
                     $this->getRow('Ваш телефон', $client->get('phone')) .
-                    $this->getRow('Город', $delivery->get('city')->get('name')) .
+         ($bakery ? $this->getRow('Город', $bakery->get('city')->get('name')) : '') .
                     $this->getRow('Адрес доставки', $delivery->get('address')) .
                     $this->getRow('Дата доставки', date('d.m.Y (H:i', $time) . '-' . date('H:i)', $time + 7200)).
                     $this->getRow('Торт', '<img alt="Торт" src="' . $cake->get('image_url') . '" />') .
@@ -148,10 +230,10 @@ class Orders extends \PhotoCake\Api\Resource\DbResource
                                     '<img alt="Изображения для печати" src="' . $cake->get('photo_url') . '" />' :
                                     'Изображение отсутствует')) .
                     $this->getRow('Вес (кг.)', $cake->get('weight')) .
-                    $this->getRow('Рецепт', $recipe->get('name')) .
-                    $this->getRow('Описание рецепта', $recipe->get('desc')) .
-                $this->getRow('Комментарий', $order->get('comment')) .
-                $this->getRow('Записка', $order->get('message')) .
+         ($recipe ? $this->getRow('Рецепт', $recipe->get('name')) : '') .
+         ($recipe ? $this->getRow('Описание рецепта', $recipe->get('desc')) : '') .
+                    $this->getRow('Комментарий', $order->get('comment')) .
+                    $this->getRow('Записка', $order->get('message')) .
                     $this->getRow('Цена с доставкой (руб.)', $payment->get('total_price')) .
                 '</tbody></table>
 
@@ -161,8 +243,8 @@ class Orders extends \PhotoCake\Api\Resource\DbResource
         </html>';
     }
 
-
-    private function getRow($name, $value) {
+    private function getRow($name, $value)
+    {
         return '<tr><td><b>' . $name . ':</b></td><td>' . $value . '</td></tr>';
     }
 }

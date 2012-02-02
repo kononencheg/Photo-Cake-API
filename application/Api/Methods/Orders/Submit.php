@@ -22,6 +22,10 @@ class Submit extends \PhotoCake\Api\Method\Method
         'recipe' => Filter::STRING,
         'bakery_id' => Filter::STRING,
 
+        'campaign' => Filter::STRING,
+        'cake_id' => Filter::STRING,
+        'cake_image' => Filter::URL,
+
         'name' => Filter::STRING,
         'phone' => Filter::PHONE,
         'email' => Filter::EMAIL,
@@ -42,13 +46,7 @@ class Submit extends \PhotoCake\Api\Method\Method
      */
     protected function filter()
     {
-        $this->applyFilter(array(
-            'image' => array( NULL => 'Ошибка обработки данных.' ),
-            'markup' => array( NULL => 'Ошибка обработки данных.' ),
-
-            'recipe' => array( NULL => 'Ошибка обработки данных.' ),
-            'bakery_id' => array( NULL => 'Ошибка обработки данных.' ),
-
+        $filter = array(
             'name' => array( NULL => 'Имя не задано.' ),
             'phone' => array(
                 NULL => 'Телефон не задан.',
@@ -63,7 +61,27 @@ class Submit extends \PhotoCake\Api\Method\Method
             'time' => array( -1 => 'Время не задано.' ),
             'city' => array( NULL => 'Город не задан.' ),
             'address' => array( NULL => 'Адрес не задан.' ),
-        ), array(
+        );
+
+        if ($this->param('cake_image')) {
+            $filter = array_merge($filter, array(
+                'campaign' => array( NULL => 'Ошибка обработки данных.' ),
+
+                'cake_price' => array( NULL => 'Ошибка обработки данных.' ),
+                'cake_weight' => array( NULL => 'Ошибка обработки данных.' ),
+                'cake_image' => array( NULL => 'Ошибка обработки данных.' ),
+            ));
+        } else {
+            $filter = array_merge($filter, array(
+                'image' => array( NULL => 'Ошибка обработки данных.' ),
+                'markup' => array( NULL => 'Ошибка обработки данных.' ),
+
+                'recipe' => array( NULL => 'Ошибка обработки данных.' ),
+                'bakery_id' => array( NULL => 'Ошибка обработки данных.' ),
+            ));
+        }
+
+        $this->applyFilter($filter, array(
             'date' => 'testDate'
         ));
     }
@@ -88,8 +106,6 @@ class Submit extends \PhotoCake\Api\Method\Method
             $this->response->addParamError
                ('date', 'Правильный формат даты "дд.мм.гггг".');
         }
-
-
     }
 
     /**
@@ -97,42 +113,32 @@ class Submit extends \PhotoCake\Api\Method\Method
      */
     protected function apply()
     {
-        $application = new \Api\Resources\Application();
-
-        $cakes = new \Api\Resources\Cakes();
-        $clients = new \Api\Resources\Clients();
         $orders = new \Api\Resources\Orders();
-        $recipes = new \Api\Resources\Recipes();
-        $deliveries = new \Api\Resources\Deliveries();
-        $bakeries = new \Api\Resources\Bakeries();
-        $payments = new \Api\Resources\Payments();
-
-        $cake = $cakes->initCake($this->param('image'),
-                                 $this->param('photo'),
-                                 $this->param('markup'));
-
-        $client = $clients->initClient(
-            $this->param('email'), $this->param('name'), $this->param('phone'),
-            $this->param('network'), $this->param('user_id')
-        );
 
         $time = $this->targetDate->getTimestamp() + $this->param('time');
-        $bakery = $bakeries->getById($this->param('bakery_id'));
 
-        $delivery = $deliveries->initDelivery
-            ($bakery->get('city'), $this->param('address'), $time);
+        $order = NULL;
+        if ($this->param('cake_image')) {
+            $order = $orders->submitCampaignOrder(
+                $this->param('cake_image'), $this->param('cake_weight'),
+                $this->param('cake_price'), $time, $this->param('address'),
+                $this->param('email'), $this->param('name'),
+                $this->param('phone'), $this->param('network'),
+                $this->param('user_id'), $this->param('comment'),
+                $this->param('message'), $this->param('campaign')
+            );
+        } else {
+            $order = $orders->submitOrder(
+                $this->param('image'), $this->param('photo'),
+                $this->param('markup'), $this->param('email'),
+                $this->param('name'), $this->param('phone'),
+                $this->param('network'), $this->param('user_id'), $time,
+                $this->param('address'),$this->param('bakery_id'),
+                $this->param('recipe'), $this->param('comment'),
+                $this->param('message'), $this->param('campaign')
+            );
+        }
 
-        $recipe = $recipes->getByName
-            ($this->param('bakery_id'), $this->param('recipe'));
-
-        $payment = $payments->initPayment
-            ($this->param('markup'), $recipe, $bakery);
-
-        $order = $orders->initOrder($cake, $recipe, $client, $bakery,
-                                    $payment, $delivery,
-                                    $this->param('comment'),
-                                    $this->param('message'));
-
-        return $orders->emailOrder($order);
+        return $order->jsonSerialize();
     }
 }
