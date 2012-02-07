@@ -12,14 +12,12 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
     {
         switch ($collection) {
             case 'bakeries': return new Bakery();
-            case 'clients':  return new Client();
             case 'cities':   return new City();
             case 'orders':   return new Order();
-            case 'recipes':  return new Recipe();
-            case 'cakes':    return new Cake();
+            case 'users':    return new User();
         }
 
-        return NULL;
+        return null;
     }
 
 }

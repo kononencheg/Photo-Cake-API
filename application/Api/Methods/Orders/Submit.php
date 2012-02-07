@@ -9,7 +9,7 @@ class Submit extends \PhotoCake\Api\Method\Method
     /**
      * @var \DateTime
      */
-    private $targetDate = NULL;
+    private $targetDate = null;
 
     /**
      * @var array
@@ -47,37 +47,37 @@ class Submit extends \PhotoCake\Api\Method\Method
     protected function filter()
     {
         $filter = array(
-            'name' => array( NULL => 'Имя не задано.' ),
+            'name' => array( null => 'Имя не задано.' ),
             'phone' => array(
-                NULL => 'Телефон не задан.',
+                null => 'Телефон не задан.',
                 false => 'Телефон введен неправильно.'
             ),
             'email' => array(
-                NULL => 'Email не задан.',
+                null => 'Email не задан.',
                 false => 'Email введен не правильно.'
             ),
 
-            'date' => array( NULL => 'Дата не задана.' ),
+            'date' => array( null => 'Дата не задана.' ),
             'time' => array( -1 => 'Время не задано.' ),
-            'city' => array( NULL => 'Город не задан.' ),
-            'address' => array( NULL => 'Адрес не задан.' ),
+            'city' => array( null => 'Город не задан.' ),
+            'address' => array( null => 'Адрес не задан.' ),
         );
 
         if ($this->param('cake_image')) {
             $filter = array_merge($filter, array(
-                'campaign' => array( NULL => 'Ошибка обработки данных.' ),
+                'campaign' => array( null => 'Ошибка обработки данных.' ),
 
-                'cake_price' => array( NULL => 'Ошибка обработки данных.' ),
-                'cake_weight' => array( NULL => 'Ошибка обработки данных.' ),
-                'cake_image' => array( NULL => 'Ошибка обработки данных.' ),
+                'cake_price' => array( null => 'Ошибка обработки данных.' ),
+                'cake_weight' => array( null => 'Ошибка обработки данных.' ),
+                'cake_image' => array( null => 'Ошибка обработки данных.' ),
             ));
         } else {
             $filter = array_merge($filter, array(
-                'image' => array( NULL => 'Ошибка обработки данных.' ),
-                'markup' => array( NULL => 'Ошибка обработки данных.' ),
+                'image' => array( null => 'Ошибка обработки данных.' ),
+                'markup' => array( null => 'Ошибка обработки данных.' ),
 
-                'recipe' => array( NULL => 'Ошибка обработки данных.' ),
-                'bakery_id' => array( NULL => 'Ошибка обработки данных.' ),
+                'recipe' => array( null => 'Ошибка обработки данных.' ),
+                'bakery_id' => array( null => 'Ошибка обработки данных.' ),
             ));
         }
 
@@ -117,7 +117,7 @@ class Submit extends \PhotoCake\Api\Method\Method
 
         $time = $this->targetDate->getTimestamp() + $this->param('time');
 
-        $order = NULL;
+        $order = null;
         if ($this->param('cake_image')) {
             $order = $orders->submitCampaignOrder(
                 $this->param('cake_image'), $this->param('cake_weight'),

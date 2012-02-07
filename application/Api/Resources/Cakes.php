@@ -52,6 +52,6 @@ class Cakes extends \PhotoCake\Api\Resource\DbResource
             return Config::get('files.url') . $fileName;
         }
 
-        return NULL;
+        return null;
     }
 }

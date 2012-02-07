@@ -20,8 +20,8 @@ class Base64Echo extends \PhotoCake\Api\Method\Method
     protected function filter()
     {
         $this->applyFilter(array(
-            'data' => array( NULL => 'Ошибка данных' ),
-            'type' => array( NULL => 'Тип данных не задан.' ),
+            'data' => array( null => 'Ошибка данных' ),
+            'type' => array( null => 'Тип данных не задан.' ),
         ));
     }
 

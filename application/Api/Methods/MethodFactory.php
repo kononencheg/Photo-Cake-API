@@ -12,6 +12,11 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
     {
         switch ($name) {
 
+            case 'users.add': return new Users\Add();
+            case 'users.signIn': return new Users\SignIn();
+            case 'users.signOut': return new Users\SignOut();
+            case 'users.getCurrent': return new Users\GetCurrent();
+
             case 'cities.getList': return new Cities\GetList();
 
             case 'orders.submit': return new Orders\Submit();
@@ -25,7 +30,7 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
 
             case 'utils.base64Echo': return new Utils\Base64Echo();
 
-            default: return NULL;
+            default: return null;
         }
     }
 

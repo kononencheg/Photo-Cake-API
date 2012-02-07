@@ -21,9 +21,9 @@ class UploadImage extends \PhotoCake\Api\Method\Method
     protected function filter()
     {
         $this->applyFilter(array(
-            'image' => array( NULL => 'Ошибка данных изображения' ),
+            'image' => array( null => 'Ошибка данных изображения' ),
             'upload_url' => array(
-                NULL => 'Url сервера загрузки не задан.',
+                null => 'Url сервера загрузки не задан.',
                 false => 'Url сервера загрузки имеет неверный формат.'
             ),
         ));

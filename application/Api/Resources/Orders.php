@@ -2,19 +2,8 @@
 
 namespace Api\Resources;
 
-class Orders extends \PhotoCake\Api\Resource\DbResource
+class Orders extends Resource
 {
-    /**
-     * @var \PhotoCake\Db\Collection\CollectionInterface
-     */
-    private $ordersCollection = NULL;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->ordersCollection = $this->getCollection('orders');
-    }
-
     /**
      * @param $image
      * @param $photo
@@ -63,7 +52,7 @@ class Orders extends \PhotoCake\Api\Resource\DbResource
             return $order;
         }
 
-        return NULL;
+        return null;
     }
 
     /**
@@ -107,7 +96,7 @@ class Orders extends \PhotoCake\Api\Resource\DbResource
             return $order;
         }
 
-        return NULL;
+        return null;
     }
 
 
@@ -117,7 +106,7 @@ class Orders extends \PhotoCake\Api\Resource\DbResource
      */
     public function saveOrder(\Model\Order $order)
     {
-        $this->ordersCollection->update($order);
+        $this->getCollection('orders')->update($order);
     }
 
     /**
@@ -138,7 +127,7 @@ class Orders extends \PhotoCake\Api\Resource\DbResource
                                 \Model\Delivery $delivery,
                                 $comment, $message, $campaign)
     {
-        $order = $this->ordersCollection->createRecord();
+        $order = $this->getCollection('orders')->createRecord();
         $order->set('cake', $cake);
         $order->set('recipe', $recipe);
         $order->set('client', $client);

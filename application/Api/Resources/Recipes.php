@@ -4,7 +4,7 @@ namespace Api\Resources;
 
 class Recipes extends \PhotoCake\Api\Resource\DbResource
 {
-    private $collection = NULL;
+    private $collection = null;
 
     public function __construct()
     {

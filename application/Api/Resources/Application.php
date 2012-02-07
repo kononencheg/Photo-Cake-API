@@ -9,7 +9,7 @@ class Application implements \PhotoCake\Api\Resource\ResourceInterface
     /**
      * @var \PhotoCake\Http\Session
      */
-    private $session = NULL;
+    private $session = null;
 
     public function __construct()
     {

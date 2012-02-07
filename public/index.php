@@ -2,6 +2,7 @@
 
 require_once($_SERVER["DOCUMENT_ROOT"] . '/bootstrap.php');
 
+use Api\Acl;
 use Api\Methods\MethodFactory;
 
 use Model\RecordFactory;
@@ -34,7 +35,8 @@ $method = $methodFactory->create($request->fetch('method'));
 $response = new Response();
 $response->setFormat($format);
 
-if ($method !== NULL) {
+if ($method !== null) {
+    $method->setAcl(new Acl());
     $method->setResponse($response);
     $method->call($request->get());
 } else {
