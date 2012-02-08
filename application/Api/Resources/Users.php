@@ -2,7 +2,7 @@
 
 namespace Api\Resources;
 
-class Users extends Resource
+class Users extends \Api\Resources\Resource
 {
     /**
      * @param string $email
@@ -51,7 +51,7 @@ class Users extends Resource
         $this->session->set('role', $user->getRole());
         $this->session->set('id', $user->getId());
 
-        return $this->getCurrentRole();
+        return $this->getCurrentUser();
     }
 
     /**
@@ -85,6 +85,14 @@ class Users extends Resource
     public function getCurrentRole()
     {
         return $this->session->get('role');
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentUserId()
+    {
+        return $this->session->get('id');
     }
 
     /**

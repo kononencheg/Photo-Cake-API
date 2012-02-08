@@ -30,18 +30,22 @@ class SignIn extends \PhotoCake\Api\Method\Method
     protected function apply()
     {
         $users = Users::getInstance();
-        $user = $users->getByEmail($this->param('email'));
+        $user = $users->getByEmail($this->getParam('email'));
 
         if ($user !== null) {
-            if ($users->testPassword($user, $this->param('password'))) {
-                return $users->signIn($user);
+            if ($users->testPassword($user, $this->getParam('password'))) {
+                return $users->signIn($user)->jsonSerialize();
             } else {
-                $this->response->addParamError('password', 'Неверный пароль.');
+                $this->response->addError(
+                	'Пользователь таким почтовым ящиком не зарегистрирован. ' .
+                	'Либо пароль не верный!', 
+            	100);
             }
         } else {
-            $this->response->addParamError('email',
-                    'Пользователь с почтовым ящиком ' . $this->param('email') .
-                            ' не зарегистрирован.');
+            $this->response->addError(
+            	'Пользователь таким почтовым ящиком не зарегистрирован. ' .
+            	'Либо пароль не верный!', 
+        	100);
         }
 
         return null;

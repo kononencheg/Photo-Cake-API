@@ -4,7 +4,7 @@ namespace Api\Methods\Orders;
 
 use \PhotoCake\Api\Arguments\Filter;
 
-class Submit extends \PhotoCake\Api\Method\Method
+class Add extends \PhotoCake\Api\Method\Method
 {
     /**
      * @var \DateTime
@@ -15,12 +15,13 @@ class Submit extends \PhotoCake\Api\Method\Method
      * @var array
      */
     protected $arguments = array(
-        'photo' => Filter::BASE64,
-        'image' => Filter::BASE64,
-        'markup' => Filter::JSON,
+        'photo_base64' => Filter::BASE64,
+        'image_base64' => Filter::BASE64,
 
-        'recipe' => Filter::STRING,
+        'markup_json' => Filter::JSON,
+
         'bakery_id' => Filter::STRING,
+        'recipe' => Filter::STRING,
 
         'campaign' => Filter::STRING,
         'cake_id' => Filter::STRING,

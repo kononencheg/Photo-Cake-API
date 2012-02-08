@@ -2,7 +2,7 @@
 
 namespace Api\Resources;
 
-class Orders extends Resource
+class Orders extends \Api\Resources\Resource
 {
     /**
      * @param $image
@@ -236,4 +236,36 @@ class Orders extends Resource
     {
         return '<tr><td><b>' . $name . ':</b></td><td>' . $value . '</td></tr>';
     }
+
+
+    ////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @param string $bakeryId
+     * @return \Iterator
+     */
+    public function getBakeryOrders($bakeryId)
+    {
+        return $this->getCollection('orders')
+                    ->fetchAll(array( 'bakery_id' => $bakeryId));
+    }
+
+    /**
+     * @static
+     * @var \Api\Resources\Orders
+     */
+    private static $instance;
+
+    /**
+     * @static
+     * @return \Api\Resources\Orders
+     */
+    public static function getInstance() {
+        if (!isset(self::$instance)) {
+            self::$instance = new Orders();
+        }
+
+        return self::$instance;
+    }
+
 }

@@ -31,14 +31,14 @@ class Base64Echo extends \PhotoCake\Api\Method\Method
     protected function apply()
     {
         $format = new RawFormat();
-        $format->setMimeType($this->param('type'));
+        $format->setMimeType($this->getParam('type'));
 
         $this->response->setFormat($format);
 
-        if ($this->param('is_downloading')) {
+        if ($this->getParam('is_downloading')) {
             $this->response->setHeader(
                 'Content-Disposition',
-                'attachment; filename=' . $this->param('file_name')
+                'attachment; filename=' . $this->getParam('file_name')
             );
 
             $this->response->setHeader(
@@ -47,7 +47,7 @@ class Base64Echo extends \PhotoCake\Api\Method\Method
             );
         }
 
-        return $this->param('data');
+        return $this->getParam('data');
     }
 }
 

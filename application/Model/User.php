@@ -4,19 +4,25 @@ namespace Model;
 
 use PhotoCake\Db\Mongo\MongoRecord;
 
-class User extends MongoRecord
+abstract class User extends MongoRecord
 {
     /**
      * @const
-     * @var int
+     * @var string
      */
-    const ADMIN = 0;
+    const NAME = 'user';
 
     /**
      * @const
      * @var int
      */
-    const BAKERY = 1;
+    const ROLE_ADMIN = 0;
+
+    /**
+     * @const
+     * @var int
+     */
+    const ROLE_BAKERY = 1;
 
     /**
      * @var string
@@ -27,13 +33,14 @@ class User extends MongoRecord
      * @var array
      */
     protected $fields = array(
+        'role' => 'int',
+
         'email' => 'string',
+
         'password' => array(
             'type' => 'string',
             'visibility' => MongoRecord::VISIBILITY_HIDDEN
         ),
-
-        'role' => 'int'
     );
 
     /**
@@ -63,19 +70,4 @@ class User extends MongoRecord
     public function setPassword($password) {
         $this->set('password', $password);
     }
-
-    /**
-     * @return int
-     */
-    public function getRole() {
-        return $this->get('role');
-    }
-
-    /**
-     * @param string $role
-     */
-    public function setRole($role) {
-        $this->set('role', $role);
-    }
-
 }

@@ -2,7 +2,7 @@
 
 namespace Api\Resources;
 
-class Cities extends \PhotoCake\Api\Resource\DbResource
+class Cities extends Resource
 {
     /**
      * @param $id

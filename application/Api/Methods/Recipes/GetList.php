@@ -15,7 +15,7 @@ class GetList extends \PhotoCake\Api\Method\Method
 
         $recipes = new \Api\Resources\Recipes();
 
-        $list = $recipes->getList($this->param('bakery_id'));
+        $list = $recipes->getList($this->getParam('bakery_id'));
         foreach ($list as $record) {
             array_push($result, $record->jsonSerialize());
         }

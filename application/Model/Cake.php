@@ -7,6 +7,12 @@ use \PhotoCake\Db\Record\AbstractRecord;
 class Cake extends \PhotoCake\Db\Mongo\MongoRecord
 {
     /**
+     * @const
+     * @var string
+     */
+    const NAME = 'cake';
+
+    /**
      * @var string
      */
     protected $collection = 'cakes';
@@ -15,16 +21,75 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
      * @var array
      */
     protected $fields = array(
+        'markup' => 'string',
+
         'image_url' => 'string',
         'photo_url' => 'string',
-        'markup' => 'string',
-        'weight' => 'float',
+
+        'dimensions' => Dimensions::NAME,
     );
 
     /**
-     * @var array
+     * @param string $markup
      */
-    protected $spanFields = array(
-        'orders' => array('image_url', 'photo_url', 'weight', '_ref'),
-    );
+    public function setMarkup($markup)
+    {
+        $this->set('markup', $markup);
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentMarkup()
+    {
+        return $this->get('content_markup');
+    }
+
+    /**
+     * @param string $photoUrl
+     */
+    public function setPhotoUrl($photoUrl)
+    {
+        $this->set('photo_url', $photoUrl);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhotoUrl()
+    {
+        return $this->get('photo_url');
+    }
+
+    /**
+     * @param string $imageUrl
+     */
+    public function setImageUrl($imageUrl)
+    {
+        $this->set('image_url', $imageUrl);
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        return $this->get('image_url');
+    }
+
+    /**
+     * @param \Model\Dimensions $dimensions
+     */
+    public function setDimensions(\Model\Dimensions $dimensions)
+    {
+        $this->set('dimensions', $dimensions);
+    }
+
+    /**
+     * @return \Model\Dimensions
+     */
+    public function getDimensions()
+    {
+        return $this->get('dimensions');
+    }
 }

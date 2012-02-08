@@ -13,7 +13,7 @@ class Add extends \PhotoCake\Api\Method\Method
     /**
      * @var array
      */
-    protected $accessList = array( User::ADMIN );
+    protected $accessList = array( User::ROLE_ADMIN );
 
     /**
      * @var array
@@ -21,7 +21,7 @@ class Add extends \PhotoCake\Api\Method\Method
     protected $arguments = array(
         'email' => Filter::STRING,
         'password' => Filter::STRING,
-        'role' => array( User::ADMIN, User::BAKERY ),
+        'role' => array( User::ROLE_ADMIN, User::ROLE_BAKERY ),
     );
 
     protected function filter()
@@ -39,15 +39,15 @@ class Add extends \PhotoCake\Api\Method\Method
     protected function apply()
     {
         $users = Users::getInstance();
-        $email = $this->param('email');
+        $email = $this->getParam('email');
 
         $user = $users->getByEmail($email);
         if ($user === null) {
-            $password = $this->param('password');
+            $password = $this->getParam('password');
 
             if (strlen($password) >= 6) {
                 $user = $users->createUser
-                    ($email, $password, $this->param('role'));
+                    ($email, $password, $this->getParam('role'));
 
                 var_dump($user->dbSerialize());
                 var_dump($user->jsonSerialize());
@@ -59,7 +59,7 @@ class Add extends \PhotoCake\Api\Method\Method
 
         } else {
             $this->response->addParamError('email',
-                    'Пользователь с почтовым ящиком ' . $this->param('email') .
+                    'Пользователь с почтовым ящиком ' . $this->getParam('email') .
                             ' уже зарегистрирован.');
         }
 
