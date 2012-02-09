@@ -1,37 +1,19 @@
 <?php
 
-namespace Api\Methods\Orders;
+namespace Api\Methods\Recipes;
 
-use Api\Resources\Orders;
-use Api\Resources\Users;
+use Api\Resources\Recipes;
 
-use Model\Order;
-use Model\User;
-
-use PhotoCake\Api\Arguments\Filter;
+use \PhotoCake\Api\Arguments\Filter;
 
 class Get extends \PhotoCake\Api\Method\Method
 {
     /**
      * @var array
      */
-    protected $accessList = array( User::ROLE_ADMIN, User::ROLE_BAKERY );
-
-    /**
-     * @var array
-     */
     protected $arguments = array(
         'bakery_id' => array( Filter::STRING, array( null => 'Идентификатор кондитерской не задан.' ) )
     );
-
-    protected function prepare()
-    {
-        $users = Users::getInstance();
-
-    	if ($users->getCurrentRole() === User::ROLE_BAKERY) {
- 			$this->setParam('bakery_id', $users->getCurrentUserId());
-    	}
-    }
 
     /**
      * @return mixed
@@ -40,7 +22,7 @@ class Get extends \PhotoCake\Api\Method\Method
     {
         $result = array();
 
-        $list = Orders::getInstance()->getBakeryOrders
+        $list = Recipes::getInstance()->getBakeryRecipes
                                             ($this->getParam('bakery_id'));
 
         foreach ($list as $record) {
@@ -48,7 +30,5 @@ class Get extends \PhotoCake\Api\Method\Method
         }
 
         return $result;
-
     }
 }
-

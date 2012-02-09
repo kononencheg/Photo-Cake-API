@@ -2,14 +2,44 @@
 
 namespace Api\Resources;
 
+use Model\Dimension;
+
 class Dimensions extends \Api\Resources\Resource
 {
+    /**
+     * @param string $bakeryId
+     * @param string $shape
+     * @param float $weight
+     * @param float $ratio
+     * @param int $personsCount
+     * @return \Model\Dimension
+     */
+    public function createDimension($bakeryId, $shape, $weight, $ratio,
+                                    $personsCount)
+    {
+        $dimension = $this->createRecord(Dimension::NAME);
+        $dimension->setBakeryId($bakeryId);
+        $dimension->setShape($shape);
+        $dimension->setWeight($weight);
+        $dimension->setRatio($ratio);
+        $dimension->setPersonsCount($personsCount);
+
+        return $dimension;
+    }
+
+    /**
+     * @param \Model\Dimension $dimension
+     */
+    public function saveDimension(Dimension $dimension)
+    {
+        $this->getCollection('dimensions')->update($dimension);
+    }
 
     /**
      * @param string $bakeryId
      * @param float $weight
      * @param string $shape
-     * @return \Model\Dimensions
+     * @return \Model\Dimension
      */
     public function getByWeight($bakeryId, $weight, $shape)
     {

@@ -12,20 +12,30 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
     {
         switch ($name) {
 
+            // Users
+
             case 'users.addAdmin': return new Users\AddAdmin();
             case 'users.addBakery': return new Users\AddBakery();
 
             case 'users.signIn': return new Users\SignIn();
             case 'users.signOut': return new Users\SignOut();
-            case 'users.getCurrent': return new Users\GetCurrent();
 
-            case 'cities.getList': return new Cities\GetList();
+            case 'users.getCurrent': return new Users\GetCurrent();
+            case 'users.getBakeries': return new Users\GetBakeries();
+
+            // Orders
+
+            case 'orders.add': return new Orders\Submit();
 
             case 'orders.submit': return new Orders\Submit();
 
-            case 'bakeries.getList': return new Bakeries\GetList();
+            case 'orders.get': return new Orders\Submit();
 
-            case 'recipes.getList': return new Recipes\GetList();
+            // Recipes
+
+            case 'recipes.get': return new Recipes\Get();
+
+            // Others
 
             case 'social.vk.uploadImage': return new Social\Vk\UploadImage();
             case 'social.ok.uploadImage': return new Social\Ok\UploadImage();

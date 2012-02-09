@@ -5,7 +5,7 @@ namespace Api\Resources;
 use Model\Payment;
 
 
-class Payments implements \PhotoCake\Api\Resource\ResourceInterface
+class Payments extends \Api\Resources\Resource
 {
     public function getDecorationPrice(\stdClass $markup)
     {
@@ -82,7 +82,7 @@ class Payments implements \PhotoCake\Api\Resource\ResourceInterface
      */
     public function createPayment()
     {
-        $payment = new \Model\Payment();
+        $payment = $this->createRecord(Payment::NAME);
         $payment->setPaymentMethod(Payment::METHOD_NONE);
 
         return $payment;

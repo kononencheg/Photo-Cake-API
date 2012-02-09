@@ -38,9 +38,10 @@ class AddAdmin extends \PhotoCake\Api\Method\Method
             if (strlen($password) >= 6) {
                 $user = $this->createUser();
 
-                var_dump($user->dbSerialize());
-                $users->saveUser($user);
-                var_dump($user->dbSerialize());
+                if ($user !== null) {
+                    $users->saveUser($user);
+                    return $user->jsonSerialize();
+                }
             } else {
                 $this->response->addParamError
                     ('password', 'Пароль слишком короткий.');
@@ -52,7 +53,7 @@ class AddAdmin extends \PhotoCake\Api\Method\Method
                             ' уже зарегистрирован.');
         }
 
-        return $user;
+        return null;
     }
 
     /**

@@ -23,12 +23,12 @@ class Bakery extends User
      * @param array $fields
      * @return array
      */
-    protected function extendFields(array $fields)
+    protected function extendFields()
     {
-        return array_merge($fields, array(
-            'city' => '\Model\City',
+        return array(
+            'city' => City::NAME,
             'delivery_price' => 'float'
-        ));
+        );
     }
 
     /**

@@ -14,7 +14,7 @@ class Clients extends \Api\Resources\Resource
      */
     public function createClient($email, $name, $phone, $network, $networkId)
     {
-        $client = new \Model\Client();
+        $client = $this->createRecord(\Model\Client::NAME);
         $client->setEmail($email);
         $client->setName($name);
         $client->setPhone($phone);

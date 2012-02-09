@@ -2,6 +2,8 @@
 
 namespace Api\Resources;
 
+use Model\User;
+
 class Users extends \Api\Resources\Resource
 {
     /**
@@ -11,7 +13,7 @@ class Users extends \Api\Resources\Resource
      */
     public function createAdmin($email, $password)
     {
-        $user = new \Model\Admin();
+        $user = $this->createRecord(\Model\Admin::NAME);
         $user->setPassword($this->saltPassword($password));
         $user->setEmail($email);
 
@@ -19,15 +21,20 @@ class Users extends \Api\Resources\Resource
     }
 
     /**
-     * @param $email
-     * @param $password
+     * @param string $email
+     * @param string $password
+     * @param float $deliveryPrice
+     * @param \Model\City $city
      * @return \Model\Bakery
      */
-    public function createBakery($email, $password)
+    public function createBakery($email, $password, $deliveryPrice,
+                                 \Model\City $city)
     {
-        $user = new \Model\Bakery();
+        $user = $this->createRecord(\Model\Bakery::NAME);
         $user->setPassword($this->saltPassword($password));
+        $user->setDeliveryPrice($deliveryPrice);
         $user->setEmail($email);
+        $user->setCity($city);
 
         return $user;
     }
@@ -90,6 +97,13 @@ class Users extends \Api\Resources\Resource
         $this->session->remove('id');
 
         return true;
+    }
+
+    public function getBakeries()
+    {
+        return $this->getCollection('users')->fetchAll(array(
+            'role' => User::ROLE_BAKERY
+        ));
     }
 
     /**

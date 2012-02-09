@@ -13,6 +13,11 @@ class Resource implements \PhotoCake\Api\Resource\ResourceInterface
     protected $collectionFactory = null;
 
     /**
+     * @var \Model\RecordFactory
+     */
+    protected $recordFactory = null;
+
+    /**
      * @var \PhotoCake\Http\Session
      */
     protected $session = null;
@@ -23,7 +28,17 @@ class Resource implements \PhotoCake\Api\Resource\ResourceInterface
                         ->getDefaultConfiguration();
 
         $this->collectionFactory = $config->getCollectionFactory();
+        $this->recordFactory = $config->getRecordFactory();
         $this->session = Session::getInstance();
+    }
+
+    /**
+     * @param $name
+     * @return \Model\Admin|\Model\Bakery|\Model\Cake|\Model\City|\Model\Client|\Model\Delivery|\Model\Dimension|\Model\DimensionPrice|\Model\Order|\Model\Payment|\Model\Recipe|null
+     */
+    protected function createRecord($name)
+    {
+        return $this->recordFactory->createByName($name, array());
     }
 
     /**

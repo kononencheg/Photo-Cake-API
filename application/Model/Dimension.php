@@ -28,11 +28,28 @@ class Dimension extends \PhotoCake\Db\Mongo\MongoRecord
      * @var array
      */
     protected $fields = array(
+        'bakery_id' => 'string',
         'shape' => 'string',
         'ratio' => 'float',
         'weight' => 'float',
         'persons_count' => 'int',
     );
+
+    /**
+     * @param string $bakeryId
+     */
+    public function setBakeryId($bakeryId)
+    {
+        $this->set('bakery_id', $bakeryId);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBakeryId()
+    {
+        return $this->get('bakery_id');
+    }
 
     /**
      * @param string $shape

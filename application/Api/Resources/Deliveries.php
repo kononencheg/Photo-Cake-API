@@ -14,7 +14,7 @@ class Deliveries extends \Api\Resources\Resource
      */
     public function createDelivery($date, $address, $comment, $message)
     {
-        $delivery = new \Model\Delivery();
+        $delivery = $this->createRecord(\Model\Delivery::NAME);
         $delivery->setDate($date);
         $delivery->setAddress($address);
         $delivery->setComment($comment);
