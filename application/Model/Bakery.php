@@ -7,6 +7,12 @@ use PhotoCake\Db\Mongo\MongoRecord;
 class Bakery extends User
 {
     /**
+     * @const
+     * @var string
+     */
+    const NAME = 'bakery';
+
+    /**
      * @var array
      */
     protected $data = array(
@@ -24,6 +30,13 @@ class Bakery extends User
             'delivery_price' => 'float'
         ));
     }
+
+    /**
+     * @var array
+     */
+    protected $spanFields = array(
+        'orders' => array('delivery_price', '_ref'),
+    );
 
     /**
      * @param \Model\City $city

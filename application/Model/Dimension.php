@@ -4,7 +4,7 @@ namespace Model;
 
 use \PhotoCake\Db\Record\AbstractRecord;
 
-class Dimensions extends \PhotoCake\Db\Mongo\MongoRecord
+class Dimension extends \PhotoCake\Db\Mongo\MongoRecord
 {
     /**
      * @const
@@ -16,33 +16,26 @@ class Dimensions extends \PhotoCake\Db\Mongo\MongoRecord
      * @const
      * @var int
      */
-    const SHAPE_ROUND = 0;
+    const SHAPE_ROUND = 'round';
 
     /**
      * @const
      * @var int
      */
-    const SHAPE_RECT = 1;
+    const SHAPE_RECT = 'rect';
 
     /**
      * @var array
      */
     protected $fields = array(
-        'shape' => 'int',
+        'shape' => 'string',
         'ratio' => 'float',
         'weight' => 'float',
         'persons_count' => 'int',
     );
 
     /**
-     * @var array
-     */
-    protected $spanFields = array(
-        'cakes' => array('weight', '_ref'),
-    );
-
-    /**
-     * @param int $shape
+     * @param string $shape
      */
     public function setShape($shape)
     {
@@ -50,7 +43,7 @@ class Dimensions extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getShape()
     {

@@ -2,48 +2,36 @@
 
 namespace Api\Resources;
 
+use Model\Dimensions;
 use PhotoCake\App\Config;
 
-class Cakes extends \PhotoCake\Api\Resource\DbResource
+class Cakes extends \Api\Resources\Resource
 {
     /**
      * @param string $image
      * @param string $photo
      * @param \stdClass $markup
-     * @return \PhotoCake\Db\Record\RecordInterface
+     * @return \Model\Cake
      */
     public function createCake($image, $photo, \stdClass $markup)
     {
-        $collection = $this->getCollection('cakes');
 
-        $cake = $collection->createRecord();
-        $cake->set('image_url', $this->saveImage('cake_image_', $image));
-        $cake->set('markup', json_encode($markup));
-        $cake->set('weight', $markup->dimensions->mass);
-
+        $cake = new \Model\Cake();
+        $cake->setImageUrl($this->saveImage('cake_image_', $image));
         if (!empty($photo)) {
-            $cake->set('photo_url', $this->saveImage('cake_photo_', $photo));
+            $cake->setPhotoUrl($this->saveImage('cake_photo_', $photo));
         }
+
+        $cake->setMarkup(json_encode($markup));
 
         return $cake;
     }
 
     /**
-     * @param $imageUrl
-     * @param $weight
-     * @return \PhotoCake\Db\Record\RecordInterface
+     * @param string $prefix
+     * @param string $data
+     * @return null|string
      */
-    public function createCampaignCake($imageUrl, $weight)
-    {
-        $collection = $this->getCollection('cakes');
-
-        $cake = $collection->createRecord();
-        $cake->set('image_url', $imageUrl);
-        $cake->set('weight', $weight);
-
-        return $cake;
-    }
-
     private function saveImage($prefix, $data) {
         $id = uniqid($prefix);
         $fileName = $id . '.jpg';
@@ -53,5 +41,23 @@ class Cakes extends \PhotoCake\Api\Resource\DbResource
         }
 
         return null;
+    }
+
+    /**
+     * @static
+     * @var \Api\Resources\Cakes
+     */
+    private static $instance;
+
+    /**
+     * @static
+     * @return \Api\Resources\Cakes
+     */
+    public static function getInstance() {
+        if (!isset(self::$instance)) {
+            self::$instance = new Cakes();
+        }
+
+        return self::$instance;
     }
 }

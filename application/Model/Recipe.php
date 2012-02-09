@@ -2,6 +2,8 @@
 
 namespace Model;
 
+use PhotoCake\Db\Mongo\MongoRecord;
+
 class Recipe extends \PhotoCake\Db\Mongo\MongoRecord
 {
     /**
@@ -20,7 +22,8 @@ class Recipe extends \PhotoCake\Db\Mongo\MongoRecord
         'name' => 'string',
         'desc' => 'string',
 
-        'price' => 'float',
+        'dimention_prices' => array( 'type' => DimensionPrice::NAME,
+                                     'relation' => MongoRecord::RELATION_MANY ),
     );
 
     /**
@@ -95,18 +98,20 @@ class Recipe extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @param float $price
+     * @return int
      */
-    public function setPrice($price)
+    public function getDimentionPricesCount()
     {
-        $this->set('price', $price);
+        return count($this->get('dimention_prices'));
     }
 
     /**
-     * @return float
+     * @param int $index
+     * @return DimensionPrice
      */
-    public function getPrice()
+    public function getDimentionPriceAt($index)
     {
-        return $this->get('price');
+        $prices = $this->get('dimention_prices');
+        return $prices[$index];
     }
 }

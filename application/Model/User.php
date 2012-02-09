@@ -44,6 +44,13 @@ abstract class User extends MongoRecord
     );
 
     /**
+     * @return int
+     */
+    public function getRole() {
+        return $this->get('role');
+    }
+
+    /**
      * @return string
      */
     public function getEmail() {

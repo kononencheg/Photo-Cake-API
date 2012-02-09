@@ -25,8 +25,7 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
 
         'image_url' => 'string',
         'photo_url' => 'string',
-
-        'dimensions' => Dimensions::NAME,
+        'dimension' => Dimension::NAME,
     );
 
     /**
@@ -78,18 +77,18 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @param \Model\Dimensions $dimensions
+     * @param \Model\Dimension $dimensions
      */
-    public function setDimensions(\Model\Dimensions $dimensions)
+    public function setDimension(\Model\Dimension $dimension)
     {
-        $this->set('dimensions', $dimensions);
+        $this->set('dimension', $dimension);
     }
 
     /**
-     * @return \Model\Dimensions
+     * @return \Model\Dimension
      */
-    public function getDimensions()
+    public function getDimension()
     {
-        return $this->get('dimensions');
+        return $this->get('dimension');
     }
 }

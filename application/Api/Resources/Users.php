@@ -7,23 +7,50 @@ class Users extends \Api\Resources\Resource
     /**
      * @param string $email
      * @param string $password
-     * @param int $role
-     * @return \Model\User
+     * @return \Model\Admin
      */
-    public function createUser($email, $password, $role)
+    public function createAdmin($email, $password)
     {
-        $user = new \Model\User();
+        $user = new \Model\Admin();
         $user->setPassword($this->saltPassword($password));
         $user->setEmail($email);
-        $user->setRole($role);
-
-        $this->getCollection('users')->update($user);
 
         return $user;
     }
 
     /**
-     * @param {string} $email
+     * @param $email
+     * @param $password
+     * @return \Model\Bakery
+     */
+    public function createBakery($email, $password)
+    {
+        $user = new \Model\Bakery();
+        $user->setPassword($this->saltPassword($password));
+        $user->setEmail($email);
+
+        return $user;
+    }
+
+    /**
+     * @param \Model\User $user
+     */
+    public function saveUser(\Model\User $user)
+    {
+        $this->getCollection('users')->update($user);
+    }
+
+    /**
+     * @param string $id
+     * @return \Model\User
+     */
+    public function getById($id)
+    {
+        return $this->getCollection('users')->fetch($id);
+    }
+
+    /**
+     * @param string $email
      * @return \Model\User
      */
     public function getByEmail($email)
@@ -44,7 +71,7 @@ class Users extends \Api\Resources\Resource
 
     /**
      * @param \Model\User $user
-     * @return int
+     * @return \Model\User
      */
     public function signIn(\Model\User $user)
     {

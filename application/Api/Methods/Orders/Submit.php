@@ -2,43 +2,39 @@
 
 namespace Api\Methods\Orders;
 
+use Model\Order;
+
+use Api\Resources\Orders;
+use Api\Resources\Clients;
+use Api\Resources\Cakes;
+use Api\Resources\Deliveries;
+use Api\Resources\Payments;
+
 use \PhotoCake\Api\Arguments\Filter;
 
 class Submit extends \PhotoCake\Api\Method\Method
 {
     /**
-     * @var \DateTime
-     */
-    private $targetDate = null;
-
-    /**
      * @var array
      */
     protected $arguments = array(
-        'photo' => Filter::BASE64,
-        'image' => Filter::BASE64,
-        'markup' => Filter::JSON,
+        'order_id' => array( Filter::STRING, array( null => 'Ошибка выбора заказа.' ) ),
 
-        'recipe' => Filter::STRING,
-        'bakery_id' => Filter::STRING,
+        'client_email'      => array( Filter::EMAIL,  array( null => 'Email не задан.', false => 'Email введен не правильно.' ) ),
+        'client_phone'      => array( Filter::PHONE,  array( null => 'Телефон не задан.', false => 'Телефон введен неправильно.' ) ),
+        'client_name'       => array( Filter::STRING, array( null => 'Имя не задано.' ) ),
+        'client_network'    => array( Filter::INTEGER ),
+        'client_network_id' => array( Filter::STRING ),
 
-        'campaign' => Filter::STRING,
-        'cake_id' => Filter::STRING,
-        'cake_image' => Filter::URL,
+        'delivery_time'    => array( Filter::INTEGER, array( -1 => 'Время не задано.' ) ),
+        'delivery_date'    => array( Filter::STRING,  array( null => 'Дата не задана.' ) ),
+        'delivery_address' => array( Filter::STRING,  array( null => 'Адрес не задан.' ) ),
+        'delivery_message' => array( Filter::STRING ),
+        'delivery_comment' => array( Filter::STRING ),
 
-        'name' => Filter::STRING,
-        'phone' => Filter::PHONE,
-        'email' => Filter::EMAIL,
+        'payment_method' => array( Filter::INTEGER,  array( null => 'Ошибка данных оплаты.' ) ),
 
-        'network' => Filter::STRING,
-        'user_id' => Filter::STRING,
-
-        'date' => Filter::STRING,
-        'time' => Filter::INTEGER,
-        'address' => Filter::STRING,
-
-        'message' => Filter::STRING,
-        'comment' => Filter::STRING,
+        'submit_type' => array( Filter::STRING ),
     );
 
     /**
@@ -46,65 +42,24 @@ class Submit extends \PhotoCake\Api\Method\Method
      */
     protected function filter()
     {
-        $filter = array(
-            'name' => array( null => 'Имя не задано.' ),
-            'phone' => array(
-                null => 'Телефон не задан.',
-                false => 'Телефон введен неправильно.'
-            ),
-            'email' => array(
-                null => 'Email не задан.',
-                false => 'Email введен не правильно.'
-            ),
-
-            'date' => array( null => 'Дата не задана.' ),
-            'time' => array( -1 => 'Время не задано.' ),
-            'city' => array( null => 'Город не задан.' ),
-            'address' => array( null => 'Адрес не задан.' ),
-        );
-
-        if ($this->getParam('cake_image')) {
-            $filter = array_merge($filter, array(
-                'campaign' => array( null => 'Ошибка обработки данных.' ),
-
-                'cake_price' => array( null => 'Ошибка обработки данных.' ),
-                'cake_weight' => array( null => 'Ошибка обработки данных.' ),
-                'cake_image' => array( null => 'Ошибка обработки данных.' ),
-            ));
-        } else {
-            $filter = array_merge($filter, array(
-                'image' => array( null => 'Ошибка обработки данных.' ),
-                'markup' => array( null => 'Ошибка обработки данных.' ),
-
-                'recipe' => array( null => 'Ошибка обработки данных.' ),
-                'bakery_id' => array( null => 'Ошибка обработки данных.' ),
-            ));
-        }
-
-        $this->applyFilter($filter, array(
+        $this->applyFilter($this->arguments, array(
             'date' => 'testDate'
         ));
     }
 
     protected function testDate($date)
     {
-        $this->targetDate = \DateTime::createFromFormat('d.m.Y', $date);
-        if ($this->targetDate !== false) {
-            $this->targetDate->setTime(0, 0);
+        $timestamp = Deliveries::getInstance()->filterDate
+                                        ($date, $this->getParam('time'));
 
-            $interval = new \DateInterval('P3D');
-
-            $today = new \DateTime();
-            $today->setTime(0, 0);
-            $edgeDate = $today->add($interval);
-
-            if ($this->targetDate->getTimestamp() < $edgeDate->getTimestamp()) {
-                $this->response->addParamError
-                    ('date', 'Срок обработки заказа минимум двое суток.');
-            }
-        } else {
+        if ($timestamp === -1) {
+            $this->response->addParamError
+                ('date', 'Срок обработки заказа минимум двое суток.');
+        } elseif ($timestamp === null) {
             $this->response->addParamError
                ('date', 'Правильный формат даты "дд.мм.гггг".');
+        } else {
+            $this->setParam('delivery_date', $timestamp);
         }
     }
 
@@ -113,32 +68,57 @@ class Submit extends \PhotoCake\Api\Method\Method
      */
     protected function apply()
     {
-        $orders = new \Api\Resources\Orders();
+        $orders = Orders::getInstance();
 
-        $time = $this->targetDate->getTimestamp() + $this->getParam('time');
+        $order = $orders->getById($this->getParam('order_id'));
+        if ($order !== null) {
+            $order->setClient($this->createClient());
+            $order->setDelivery($this->createDelivery());
+            $order->setStatus(Order::ORDER_SUBMIT);
 
-        $order = null;
-        if ($this->getParam('cake_image')) {
-            $order = $orders->submitCampaignOrder(
-                $this->getParam('cake_image'), $this->getParam('cake_weight'),
-                $this->getParam('cake_price'), $time, $this->getParam('address'),
-                $this->getParam('email'), $this->getParam('name'),
-                $this->getParam('phone'), $this->getParam('network'),
-                $this->getParam('user_id'), $this->getParam('comment'),
-                $this->getParam('message'), $this->getParam('campaign')
-            );
-        } else {
-            $order = $orders->submitOrder(
-                $this->getParam('image'), $this->getParam('photo'),
-                $this->getParam('markup'), $this->getParam('email'),
-                $this->getParam('name'), $this->getParam('phone'),
-                $this->getParam('network'), $this->getParam('user_id'), $time,
-                $this->getParam('address'),$this->getParam('bakery_id'),
-                $this->getParam('recipe'), $this->getParam('comment'),
-                $this->getParam('message'), $this->getParam('campaign')
-            );
+            $orders->updatePaymentMethod
+                ($order, $this->getParam('payment_method'));
+
+            $orders->saveOrder($order);
+
+            return $order->jsonSerialize();
         }
 
-        return $order->jsonSerialize();
+        return null;
     }
+
+    /**
+     * @return \Model\Delivery
+     */
+    private function createDelivery()
+    {
+        $deliveries = Deliveries::getInstance();
+        $delivery = $deliveries->createDelivery(
+            $this->getParam('delivery_date'),
+            $this->getParam('delivery_address'),
+            $this->getParam('delivery_comment'),
+            $this->getParam('delivery_message')
+        );
+
+
+        return $delivery;
+    }
+
+    /**
+     * @return \Model\Client
+     */
+    private function createClient()
+    {
+        $clients = Clients::getInstance();
+        $client = $clients->createClient(
+            $this->getParam('client_email'),
+            $this->getParam('client_name'),
+            $this->getParam('client_phone'),
+            $this->getParam('client_network'),
+            $this->getParam('client_network_1d')
+        );
+
+        return $client;
+    }
+
 }

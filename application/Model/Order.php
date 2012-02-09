@@ -10,6 +10,26 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
      */
     const NAME = 'order';
 
+
+    /**
+     * @const
+     * @var int
+     */
+    const ORDER_NEW = 0;
+
+    /**
+     * @const
+     * @var int
+     */
+    const ORDER_SUBMIT = 1;
+
+    /**
+     * @const
+     * @var int
+     */
+    const ORDER_APPROVE = 2;
+
+
     /**
      * @const
      * @var int
@@ -27,7 +47,6 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
      * @var int
      */
     const DELIVERY_COMPLETE = 2;
-
 
     /**
      * @const
@@ -50,34 +69,34 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
      * @var array
      */
     protected $fields = array(
-        'bakery_id' => 'string',
+        'status' => 'int',
+        'payment_status' => 'int',
+        'delivery_status' => 'int',
 
-        'client' => Client::NAME,
-
-        'cake' => Cake::NAME,
+        'bakery' => Bakery::NAME,
         'recipe' => Recipe::NAME,
+        'cake' => Cake::NAME,
 
-        'delivery' => Delivery::NAME,
         'payment'  => Payment::NAME,
 
-        'delivery_status' => 'int',
-        'payment_status' => 'int',
+        'client' => Client::NAME,
+        'delivery' => Delivery::NAME,
     );
 
     /**
-     * @param string $bakeryId
+     * @param Bakery $bakeryId
      */
-    public function setBakeryId($bakeryId)
+    public function setBakery(Bakery $bakeryId)
     {
-        $this->set('bakery_id', $bakeryId);
+        $this->set('bakery', $bakeryId);
     }
 
     /**
-     * @return string
+     * @return Bakery
      */
     public function getBakeryId()
     {
-        return $this->get('bakery_id');
+        return $this->get('bakery');
     }
 
     /**
@@ -110,6 +129,22 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     public function getClient()
     {
         return $this->get('client');
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->set('status', $status);
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->get('status');
     }
 
     /**

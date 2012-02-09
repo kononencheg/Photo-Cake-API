@@ -8,7 +8,7 @@ use Model\User;
 
 use PhotoCake\Api\Arguments\Filter;
 
-class Add extends \PhotoCake\Api\Method\Method
+class AddAdmin extends \PhotoCake\Api\Method\Method
 {
     /**
      * @var array
@@ -19,19 +19,9 @@ class Add extends \PhotoCake\Api\Method\Method
      * @var array
      */
     protected $arguments = array(
-        'email' => Filter::STRING,
-        'password' => Filter::STRING,
-        'role' => array( User::ROLE_ADMIN, User::ROLE_BAKERY ),
+        'email'    => array( Filter::EMAIL,  array( null => 'Email не задан.', false => 'Email имеет не верный формат!' ) ),
+        'password' => array( Filter::STRING, array( null => 'Пароль не задан.' ) ),
     );
-
-    protected function filter()
-    {
-        $this->applyFilter(array(
-            'email' => array( null => 'Email не задан.' ),
-            'password' => array( null => 'Пароль не задан.' ),
-            'role' => array( null => 'Роль не сущствует.' ),
-        ));
-    }
 
     /**
      * @return mixed
@@ -46,12 +36,11 @@ class Add extends \PhotoCake\Api\Method\Method
             $password = $this->getParam('password');
 
             if (strlen($password) >= 6) {
-                $user = $users->createUser
-                    ($email, $password, $this->getParam('role'));
+                $user = $this->createUser();
 
                 var_dump($user->dbSerialize());
-                var_dump($user->jsonSerialize());
-
+                $users->saveUser($user);
+                var_dump($user->dbSerialize());
             } else {
                 $this->response->addParamError
                     ('password', 'Пароль слишком короткий.');
@@ -64,6 +53,15 @@ class Add extends \PhotoCake\Api\Method\Method
         }
 
         return $user;
+    }
+
+    /**
+     * @return User
+     */
+    protected function createUser()
+    {
+        return Users::getInstance()->createAdmin
+                    ($this->getParam('email'), $this->getParam('password'));
     }
 }
 

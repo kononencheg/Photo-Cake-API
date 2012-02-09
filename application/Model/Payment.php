@@ -14,36 +14,41 @@ class Payment extends \PhotoCake\Db\Mongo\MongoRecord
      * @const
      * @var int
      */
-    const CASH = 0;
+    const METHOD_NONE = -1;
 
     /**
      * @const
      * @var int
      */
-    const OK = 1;
+    const METHOD_CASH = 0;
 
     /**
      * @const
      * @var int
      */
-    const VK = 2;
+    const METHOD_OK = 1;
 
     /**
      * @const
      * @var int
      */
-    const RBK = 3;
+    const METHOD_VK = 2;
+
+    /**
+     * @const
+     * @var int
+     */
+    const METHOD_RBK = 3;
 
     /**
      * @var array
      */
     protected $fields = array(
-        'payment_type' => 'int',
+        'payment_method' => 'int',
 
         'decoration_price' => 'float',
         'delivery_price' => 'float',
         'recipe_price' => 'float',
-        'total_price' => 'float',
     );
 
     /**
@@ -95,33 +100,17 @@ class Payment extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @param float $totalPrice
+     * @param int $paymentMethod
      */
-    public function setTotalPrice($totalPrice)
+    public function setPaymentMethod($paymentMethod)
     {
-        $this->set('total_price', $totalPrice);
-    }
-
-    /**
-     * @return float
-     */
-    public function getTotalPrice()
-    {
-        return $this->get('total_price');
-    }
-
-    /**
-     * @param int $paymentType
-     */
-    public function setPaymentType($paymentType)
-    {
-        $this->set('payment_type', $paymentType);
+        $this->set('payment_type', $paymentMethod);
     }
 
     /**
      * @return int
      */
-    public function getPaymentType()
+    public function getPaymentMethod()
     {
         return $this->get('payment_type');
     }

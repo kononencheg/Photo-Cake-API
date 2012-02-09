@@ -2,27 +2,43 @@
 
 namespace Api\Resources;
 
-class Clients extends \PhotoCake\Api\Resource\DbResource
+class Clients extends \Api\Resources\Resource
 {
     /**
-     * @param $email
-     * @param $name
-     * @param $phone
-     * @param $network
-     * @param $userId
-     * @return \PhotoCake\Db\Record\RecordInterface
+     * @param string $email
+     * @param string $name
+     * @param string $phone
+     * @param int $network
+     * @param string $networkId
+     * @return \Model\Client
      */
-    public function createClient($email, $name, $phone, $network, $userId)
+    public function createClient($email, $name, $phone, $network, $networkId)
     {
-        $collection = $this->getCollection('clients');
-
-        $client = $collection->createRecord();
-        $client->set('email', $email);
-        $client->set('name', $name);
-        $client->set('phone', $phone);
-        $client->set('network', $network);
-        $client->set('user_id', $userId);
+        $client = new \Model\Client();
+        $client->setEmail($email);
+        $client->setName($name);
+        $client->setPhone($phone);
+        $client->setNetwork($network);
+        $client->setNetworkId($networkId);
 
         return $client;
+    }
+
+    /**
+     * @static
+     * @var \Api\Resources\Clients
+     */
+    private static $instance;
+
+    /**
+     * @static
+     * @return \Api\Resources\Clients
+     */
+    public static function getInstance() {
+        if (!isset(self::$instance)) {
+            self::$instance = new Clients();
+        }
+
+        return self::$instance;
     }
 }

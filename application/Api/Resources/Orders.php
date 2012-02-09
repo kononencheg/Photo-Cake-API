@@ -2,169 +2,12 @@
 
 namespace Api\Resources;
 
+use Model\Order;
+
 class Orders extends \Api\Resources\Resource
 {
-    /**
-     * @param $image
-     * @param $photo
-     * @param $markup
-     * @param $email
-     * @param $name
-     * @param $phone
-     * @param $network
-     * @param $userId
-     * @param $time
-     * @param $address
-     * @param $bakeryId
-     * @param $recipe
-     * @param $comment
-     * @param $message
-     * @param $campaign
-     * @return \Model\Order
-     */
-    public function submitOrder($image, $photo, $markup,
-                                $email, $name, $phone, $network, $userId,
-                                $time, $address, $bakeryId, $recipe,
-                                $comment, $message, $campaign)
-    {
-        $cakes = new \Api\Resources\Cakes();
-        $clients = new \Api\Resources\Clients();
-        $recipes = new \Api\Resources\Recipes();
-        $deliveries = new \Api\Resources\Deliveries();
-        $bakeries = new \Api\Resources\Bakeries();
-        $payments = new \Api\Resources\Payments();
 
-        $bakery = $bakeries->getById($bakeryId);
-        $recipe = $recipes->getByName($bakeryId, $recipe);
-
-        $cake = $cakes->createCake($image, $photo, $markup);
-        $payment = $payments->createPayment($markup, $recipe, $bakery);
-        $delivery = $deliveries->createDelivery($address, $time);
-        $client = $clients->createClient($email, $name, $phone, $network,
-                                         $userId);
-
-        $order = $this->createOrder($cake, $recipe, $client, $bakery, $payment,
-                                    $delivery, $comment, $message, $campaign);
-
-        $this->saveOrder($order);
-
-        if ($this->emailOrder($order)) {
-            return $order;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param $imageUrl
-     * @param $weight
-     * @param $price
-     * @param $time
-     * @param $address
-     * @param $email
-     * @param $name
-     * @param $phone
-     * @param $network
-     * @param $userId
-     * @param $comment
-     * @param $message
-     * @param $campaign
-     * @return \Model\Order
-     */
-    public function submitCampaignOrder($imageUrl, $weight, $price, $time,
-                                        $address, $email, $name, $phone,
-                                        $network, $userId, $comment, $message,
-                                        $campaign)
-    {
-        $cakes = new \Api\Resources\Cakes();
-        $clients = new \Api\Resources\Clients();
-        $deliveries = new \Api\Resources\Deliveries();
-        $payments = new \Api\Resources\Payments();
-
-        $cake = $cakes->createCampaignCake($imageUrl, $weight);
-        $payment = $payments->createCampaignPayment($price);
-        $delivery = $deliveries->createDelivery($address, $time);
-        $client = $clients->createClient($email, $name, $phone, $network,
-                                         $userId);
-
-        $order = $this->createCampaignOrder($cake, $client, $payment, $delivery,
-                                            $comment, $message, $campaign);
-
-        $this->saveOrder($order);
-
-        if ($this->emailOrder($order)) {
-            return $order;
-        }
-
-        return null;
-    }
-
-
-    /**
-     * @param \Model\Order $order
-     * @return \PhotoCake\Db\Record\RecordInterface
-     */
-    public function saveOrder(\Model\Order $order)
-    {
-        $this->getCollection('orders')->update($order);
-    }
-
-    /**
-     * @param \Model\Cake $cake
-     * @param \Model\Recipe $recipe
-     * @param \Model\Client $client
-     * @param \Model\Bakery $bakery
-     * @param \Model\Payment $payment
-     * @param \Model\Delivery $delivery
-     * @param $comment
-     * @param $message
-     * @param $campaign
-     * @return \PhotoCake\Db\Record\RecordInterface
-     */
-    public function createOrder(\Model\Cake $cake, \Model\Recipe $recipe,
-                                \Model\Client $client, \Model\Bakery $bakery,
-                                \Model\Payment $payment,
-                                \Model\Delivery $delivery,
-                                $comment, $message, $campaign)
-    {
-        $order = $this->getCollection('orders')->createRecord();
-        $order->set('cake', $cake);
-        $order->set('recipe', $recipe);
-        $order->set('client', $client);
-        $order->set('delivery', $delivery);
-        $order->set('bakery', $bakery);
-
-        $order->set('comment', $comment);
-        $order->set('message', $message);
-        $order->set('campaign', $campaign);
-
-        $order->set('payment', $payment);
-
-        return $order;
-    }
-
-
-    public function createCampaignOrder(\Model\Cake $cake,
-                                        \Model\Client $client,
-                                        \Model\Payment $payment,
-                                        \Model\Delivery $delivery,
-                                        $comment, $message, $campaign)
-    {
-        $order = $this->ordersCollection->createRecord();
-        $order->set('cake', $cake);
-        $order->set('client', $client);
-        $order->set('delivery', $delivery);
-
-        $order->set('comment', $comment);
-        $order->set('message', $message);
-        $order->set('campaign', $campaign);
-
-        $order->set('payment', $payment);
-
-        return $order;
-    }
-
-    public function emailOrder(\Model\Order $order)
+    /*public function emailOrder(\Model\Order $order)
     {
         $to = implode(', ', array(
             'kononencheg@gmail.com', 'visser@yandex.ru',
@@ -236,9 +79,48 @@ class Orders extends \Api\Resources\Resource
     {
         return '<tr><td><b>' . $name . ':</b></td><td>' . $value . '</td></tr>';
     }
-
+*/
 
     ////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @return \Model\Order
+     */
+    public function createOrder()
+    {
+        $order = new Order();
+        $order->setStatus(Order::ORDER_NEW);
+        $order->setDeliveryStatus(Order::DELIVERY_NEW);
+        $order->setPaymentStatus(Order::PAYMENT_NEW);
+
+        return $order;
+    }
+
+    /**
+     * @param \Model\Order $order
+     * @param int $method
+     */
+    public function updatePaymentMethod(Order $order, $method)
+    {
+        $order->getPayment()->setPaymentMethod($method);
+    }
+
+    /**
+     * @param \Model\Order $order
+     */
+    public function saveOrder(\Model\Order $order)
+    {
+        $this->getCollection('orders')->update($order);
+    }
+
+    /**
+     * @param string $id
+     * @return \Model\Order
+     */
+    public function getById($id)
+    {
+        return $this->getCollection('orders')->fetch($id);
+    }
 
     /**
      * @param string $bakeryId
@@ -247,7 +129,7 @@ class Orders extends \Api\Resources\Resource
     public function getBakeryOrders($bakeryId)
     {
         return $this->getCollection('orders')
-                    ->fetchAll(array( 'bakery_id' => $bakeryId));
+                    ->fetchAll(array( 'bakery_id' => $bakeryId ));
     }
 
     /**
@@ -267,5 +149,4 @@ class Orders extends \Api\Resources\Resource
 
         return self::$instance;
     }
-
 }
