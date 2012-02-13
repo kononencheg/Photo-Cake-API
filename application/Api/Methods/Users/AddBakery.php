@@ -26,10 +26,16 @@ class AddBakery extends AddAdmin
     {
         $city = Cities::getInstance()->getById($this->getParam('city_id'));
         if ($city !== null) {
-            return Users::getInstance()->createBakery(
-                $this->getParam('email'), $this->getParam('password'),
-                $this->getParam('delivery_price'), $city
+            $user = Users::getInstance()->createBakery(
+                $this->getParam('name'),
+                $this->getParam('email'),
+                $this->getParam('password'),
+                $this->getParam('delivery_price')
             );
+
+            $user->setCity($city);
+
+            return $user;
         } else {
             $this->response->addParamError('city_id', 'Город не найден.');
         }

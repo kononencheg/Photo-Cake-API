@@ -33,6 +33,7 @@ abstract class User extends MongoRecord
      * @var array
      */
     protected $fields = array(
+        'name' => 'string',
         'role' => 'int',
 
         'email' => 'string',
@@ -62,6 +63,20 @@ abstract class User extends MongoRecord
      */
     public function setEmail($email) {
         $this->set('email', $email);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName() {
+        return $this->get('name');
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name) {
+        $this->set('name', $name);
     }
 
     /**

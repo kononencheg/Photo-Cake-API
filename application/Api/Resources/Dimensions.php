@@ -37,6 +37,17 @@ class Dimensions extends \Api\Resources\Resource
 
     /**
      * @param string $bakeryId
+     * @return \Iterator
+     */
+    public function getBakeryDimensions($bakeryId)
+    {
+        return $this->getCollection('dimensions')->fetchAll(array(
+            'bakery_id' => $bakeryId
+        ));
+    }
+
+    /**
+     * @param string $bakeryId
      * @param float $weight
      * @param string $shape
      * @return \Model\Dimension

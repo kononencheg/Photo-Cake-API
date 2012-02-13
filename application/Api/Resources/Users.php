@@ -7,15 +7,17 @@ use Model\User;
 class Users extends \Api\Resources\Resource
 {
     /**
+     * @param string $name
      * @param string $email
      * @param string $password
      * @return \Model\Admin
      */
-    public function createAdmin($email, $password)
+    public function createAdmin($name, $email, $password)
     {
         $user = $this->createRecord(\Model\Admin::NAME);
         $user->setPassword($this->saltPassword($password));
         $user->setEmail($email);
+        $user->setName($name);
 
         return $user;
     }
@@ -24,17 +26,15 @@ class Users extends \Api\Resources\Resource
      * @param string $email
      * @param string $password
      * @param float $deliveryPrice
-     * @param \Model\City $city
      * @return \Model\Bakery
      */
-    public function createBakery($email, $password, $deliveryPrice,
-                                 \Model\City $city)
+    public function createBakery($name, $email, $password, $deliveryPrice)
     {
         $user = $this->createRecord(\Model\Bakery::NAME);
         $user->setPassword($this->saltPassword($password));
-        $user->setDeliveryPrice($deliveryPrice);
         $user->setEmail($email);
-        $user->setCity($city);
+        $user->setName($name);
+        $user->setDeliveryPrice($deliveryPrice);
 
         return $user;
     }

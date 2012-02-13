@@ -11,6 +11,8 @@ use Api\Resources\Payments;
 
 use PhotoCake\Api\Arguments\Filter;
 
+use PhotoCake\App\Config;
+
 class Add extends \PhotoCake\Api\Method\Method
 {
     /**
@@ -21,7 +23,7 @@ class Add extends \PhotoCake\Api\Method\Method
 
         'recipe_name' => array( Filter::STRING, array( null => 'Ошибка имени рецепта.' ) ),
         'recipe_desc' => array( Filter::STRING, array( null => 'Ошибка описания рецепта.' ) ),
-        'recipe_image_url' => array( Filter::STRING, array( null => 'Ошибка картинки рецепта.' ) ),
+        'recipe_image' => array( Filter::FILE, array( null => 'Ошибка картинки рецепта.' ) ),
     );
 
     /**
@@ -29,17 +31,37 @@ class Add extends \PhotoCake\Api\Method\Method
      */
     protected function apply()
     {
-        $recipes = Recipes::getInstance();
+        $imageInfo = $this->getParam('recipe_image');
+        if ($imageInfo['error'] === UPLOAD_ERR_OK) {
 
-        $recipe = $recipes->createRecipe(
-            $this->getParam('bakery_id'),
-            $this->getParam('recipe_name'),
-            $this->getParam('recipe_desc'),
-            $this->getParam('recipe_image_url')
-        );
+            $imageName = uniqid('recipe_image_') . '.jpg';
+            $fileName = Config::get('files.folder') . $imageName;
 
-        $recipes->saveRecipe($recipe);
+            if (move_uploaded_file($imageInfo['tmp_name'], $fileName)) {
 
-        return $recipe->jsonSerialize();
+                $recipes = Recipes::getInstance();
+
+                $recipe = $recipes->createRecipe(
+                    $this->getParam('bakery_id'),
+                    $this->getParam('recipe_name'),
+                    $this->getParam('recipe_desc'),
+                    Config::get('files.url') . $imageName
+                );
+
+                $recipes->saveRecipe($recipe);
+
+                return $recipe->jsonSerialize();
+
+            } else {
+                $this->response
+                     ->addParamError('recipe_image', 'Ошибка обработки файла');
+            }
+
+        } else {
+            $this->response
+                 ->addParamError('recipe_image', 'Ошибка загрузки файла');
+        }
+
+        return null;
     }
 }

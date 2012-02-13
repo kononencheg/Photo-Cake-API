@@ -19,6 +19,7 @@ class AddAdmin extends \PhotoCake\Api\Method\Method
      * @var array
      */
     protected $arguments = array(
+        'name'     => array( Filter::STRING, array( null => 'Имя не задано.' ) ),
         'email'    => array( Filter::EMAIL,  array( null => 'Email не задан.', false => 'Email имеет не верный формат!' ) ),
         'password' => array( Filter::STRING, array( null => 'Пароль не задан.' ) ),
     );
@@ -61,8 +62,11 @@ class AddAdmin extends \PhotoCake\Api\Method\Method
      */
     protected function createUser()
     {
-        return Users::getInstance()->createAdmin
-                    ($this->getParam('email'), $this->getParam('password'));
+        return Users::getInstance()->createAdmin(
+            $this->getParam('name'),
+            $this->getParam('email'),
+            $this->getParam('password')
+        );
     }
 }
 

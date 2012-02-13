@@ -42,6 +42,16 @@ class Recipes extends \Api\Resources\Resource
     }
 
     /**
+     * @param string $id
+     */
+    public function removeById($id)
+    {
+        $this->getCollection('recipes')->removeAll(array(
+            '_id' => new \MongoId($id)
+        ));
+    }
+
+    /**
      * @param string $bakeryId
      * @return \Iterator
      */

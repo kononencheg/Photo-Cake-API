@@ -18,6 +18,7 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
             case 'cities': $result = new City(); break;
             case 'orders': $result = new Order(); break;
             case 'bakeries': $result = new Bakery(); break;
+            case 'recipes': $result = new Recipe(); break;
 
         }
 
