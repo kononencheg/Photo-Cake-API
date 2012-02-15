@@ -65,8 +65,6 @@ class Submit extends \PhotoCake\Api\Method\Method
 
         if ($this->param('cake_image')) {
             $filter = array_merge($filter, array(
-                'campaign' => array( NULL => 'Ошибка обработки данных.' ),
-
                 'cake_price' => array( NULL => 'Ошибка обработки данных.' ),
                 'cake_weight' => array( NULL => 'Ошибка обработки данных.' ),
                 'cake_image' => array( NULL => 'Ошибка обработки данных.' ),
