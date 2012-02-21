@@ -68,7 +68,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var array
      */
-    protected $fields = array(
+    protected $options = array(
         'status' => 'int',
         'payment_status' => 'int',
         'delivery_status' => 'int',

@@ -32,7 +32,7 @@ abstract class User extends MongoRecord
     /**
      * @var array
      */
-    protected $fields = array(
+    protected $options = array(
         'name' => 'string',
         'role' => 'int',
 

@@ -20,7 +20,7 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var array
      */
-    protected $fields = array(
+    protected $options = array(
         'markup' => 'string',
 
         'image_url' => 'string',

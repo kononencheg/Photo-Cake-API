@@ -27,7 +27,7 @@ class Dimension extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var array
      */
-    protected $fields = array(
+    protected $options = array(
         'bakery_id' => 'string',
         'shape' => 'string',
         'ratio' => 'float',

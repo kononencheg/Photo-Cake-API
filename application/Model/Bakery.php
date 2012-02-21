@@ -23,7 +23,7 @@ class Bakery extends User
      * @param array $fields
      * @return array
      */
-    protected function extendFields()
+    protected function extendOptions()
     {
         return array(
             'city' => City::NAME,

@@ -20,7 +20,7 @@ class City extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var array
      */
-    protected $fields = array(
+    protected $options = array(
         'name' => 'string',
         'timezone_offset' => 'int',
     );

@@ -13,7 +13,7 @@ class Delivery extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var array
      */
-    protected $fields = array(
+    protected $options = array(
         'date' => 'int',
 
         'address' => 'string',

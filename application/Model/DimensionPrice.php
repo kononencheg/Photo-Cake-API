@@ -15,8 +15,9 @@ class DimensionPrice extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var array
      */
-    protected $fields = array(
+    protected $options = array(
         'dimension_id' => 'string',
+        'hello' => 'string',
         'price' => 'float',
     );
 
@@ -26,6 +27,7 @@ class DimensionPrice extends \PhotoCake\Db\Mongo\MongoRecord
     public function setPrice($price)
     {
         $this->set('price', $price);
+        $this->set('hello', 'heloooooooooooo');
     }
 
     /**

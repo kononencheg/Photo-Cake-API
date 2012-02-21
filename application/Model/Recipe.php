@@ -13,9 +13,14 @@ class Recipe extends \PhotoCake\Db\Mongo\MongoRecord
     const NAME = 'recipe';
 
     /**
+     * @var string
+     */
+    protected $collection = 'recipes';
+
+    /**
      * @var array
      */
-    protected $fields = array(
+    protected $options = array(
         'bakery_id' => 'string',
         'image_url' => 'string',
 
@@ -23,7 +28,8 @@ class Recipe extends \PhotoCake\Db\Mongo\MongoRecord
         'desc' => 'string',
 
         'dimention_prices' => array( 'type' => DimensionPrice::NAME,
-                                     'relation' => MongoRecord::RELATION_MANY ),
+                                     'relation' => MongoRecord::RELATION_MANY,
+                                     'key_field' => 'dimension_id' ),
     );
 
     /**
@@ -98,20 +104,36 @@ class Recipe extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @return int
+     * @return array
      */
-    public function getDimentionPricesCount()
+    public function getDimentionPrices()
     {
-        return count($this->get('dimention_prices'));
+        return $this->get('dimention_prices');
     }
 
     /**
-     * @param int $index
+     * @param DimensionPrice $dimentionPrice
+     */
+    public function addDimentionPrice(DimensionPrice $dimentionPrice)
+    {
+        return $this->add('dimention_prices', $dimentionPrice);
+    }
+
+    /**
+     * @param DimensionPrice $dimentionPrice
+     */
+    public function removeDimentionPrice(DimensionPrice $dimentionPrice)
+    {
+        return $this->remove('dimention_prices', $dimentionPrice);
+    }
+
+    /**
+     * @param string $dimentionId
      * @return DimensionPrice
      */
-    public function getDimentionPriceAt($index)
+    public function getDimentionPrice($dimentionId)
     {
         $prices = $this->get('dimention_prices');
-        return $prices[$index];
+        return $prices[$dimentionId];
     }
 }

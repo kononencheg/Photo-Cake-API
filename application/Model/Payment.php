@@ -43,7 +43,7 @@ class Payment extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var array
      */
-    protected $fields = array(
+    protected $options = array(
         'payment_method' => 'int',
 
         'decoration_price' => 'float',

@@ -36,7 +36,7 @@ class Client extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @var array
      */
-    protected $fields = array(
+    protected $options = array(
         'name' => 'string',
 
         'email' => 'string',
