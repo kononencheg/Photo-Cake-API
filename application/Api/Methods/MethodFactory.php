@@ -12,6 +12,10 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
     {
         switch ($name) {
 
+            // Dimensions
+
+            case 'dimensions.get': return new Dimensions\Get();
+
             // Users
 
             case 'users.addAdmin': return new Users\AddAdmin();

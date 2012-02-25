@@ -1,6 +1,6 @@
 <?php
 
-define('INI_FILE', $_SERVER["DOCUMENT_ROOT"] . '/../config/application.ini');
+define('INI_FILE', realpath($_SERVER["DOCUMENT_ROOT"] . '/../config/application.ini'));
 
 set_include_path(implode(PATH_SEPARATOR, array(
     realpath($_SERVER["DOCUMENT_ROOT"] . '/../application'),
@@ -9,7 +9,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 )));
 
 function load_class($className) {
-    $classPath = str_replace(array('\\', '_'), \DIRECTORY_SEPARATOR, $className) . '.php';
+    $classPath = str_replace('\\', \DIRECTORY_SEPARATOR, $className) . '.php';
 
     $includePaths = explode(PATH_SEPARATOR, get_include_path());
     foreach($includePaths as $path) {
@@ -24,6 +24,6 @@ function load_class($className) {
 
 spl_autoload_register('load_class');
 
-// For IE iframe
+// Header for saving cookies in IE iframe
 header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
 

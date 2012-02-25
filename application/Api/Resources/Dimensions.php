@@ -3,6 +3,7 @@
 namespace Api\Resources;
 
 use Model\Dimension;
+use Model\DimensionPrice;
 
 class Dimensions extends \Api\Resources\Resource
 {
@@ -14,17 +15,29 @@ class Dimensions extends \Api\Resources\Resource
      * @param int $personsCount
      * @return \Model\Dimension
      */
-    public function createDimension($bakeryId, $shape, $weight, $ratio,
-                                    $personsCount)
+    public function createDimension($shape, $weight, $ratio, $personsCount)
     {
         $dimension = $this->createRecord(Dimension::NAME);
-        $dimension->setBakeryId($bakeryId);
         $dimension->setShape($shape);
         $dimension->setWeight($weight);
         $dimension->setRatio($ratio);
         $dimension->setPersonsCount($personsCount);
 
         return $dimension;
+    }
+
+    /**
+     * @param float $weight
+     * @param float $price
+     * @return \Model\DimensionPrice
+     */
+    public function createDimensionPrice($weight, $price)
+    {
+        $dimensionPrice = $this->createRecord(DimensionPrice::NAME);
+        $dimensionPrice->setWeight($weight);
+        $dimensionPrice->setPrice($price);
+
+        return $dimensionPrice;
     }
 
     /**
@@ -36,31 +49,25 @@ class Dimensions extends \Api\Resources\Resource
     }
 
     /**
-     * @param string $bakeryId
      * @return \Iterator
      */
-    public function getBakeryDimensions($bakeryId)
+    public function getDimensions()
     {
-        return $this->getCollection('dimensions')->fetchAll(array(
-            'bakery_id' => $bakeryId
-        ));
+        return $this->getCollection('dimensions')->fetchAll();
     }
 
     /**
-     * @param string $bakeryId
      * @param float $weight
      * @param string $shape
      * @return \Model\Dimension
      */
-    public function getByWeight($bakeryId, $weight, $shape)
+    public function getOne($weight, $shape)
     {
         return $this->getCollection('dimensions')->fetchOne(array(
-            'bakery_id' => $bakeryId,
             'shape' => $shape,
             'weight' => $weight
         ));
     }
-
 
     /**
      * @static

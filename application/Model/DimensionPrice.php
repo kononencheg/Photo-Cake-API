@@ -16,8 +16,7 @@ class DimensionPrice extends \PhotoCake\Db\Mongo\MongoRecord
      * @var array
      */
     protected $options = array(
-        'dimension_id' => 'string',
-        'hello' => 'string',
+        'weight' => 'float',
         'price' => 'float',
     );
 
@@ -27,7 +26,6 @@ class DimensionPrice extends \PhotoCake\Db\Mongo\MongoRecord
     public function setPrice($price)
     {
         $this->set('price', $price);
-        $this->set('hello', 'heloooooooooooo');
     }
 
     /**
@@ -39,19 +37,19 @@ class DimensionPrice extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @param string $dimensionId
+     * @param float $weight
      */
-    public function setDimensionId($dimensionId)
+    public function setWeight($weight)
     {
-        $this->set('dimension_id', $dimensionId);
+        $this->set('weight', $weight);
     }
 
     /**
-     * @return string
+     * @return float
      */
-    public function getDimensionId()
+    public function getWeight()
     {
-        return $this->get('dimension_id');
+        return $this->get('weight');
     }
 
 }

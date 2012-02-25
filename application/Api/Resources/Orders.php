@@ -89,7 +89,7 @@ class Orders extends \Api\Resources\Resource
     public function createOrder()
     {
         $order = $this->createRecord(Order::NAME);
-        $order->setStatus(Order::ORDER_NEW);
+        $order->setStatus(Order::ORDER_INACTIVE);
         $order->setDeliveryStatus(Order::DELIVERY_NEW);
         $order->setPaymentStatus(Order::PAYMENT_NEW);
 

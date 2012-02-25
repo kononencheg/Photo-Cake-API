@@ -3,6 +3,7 @@
 namespace Api\Methods\Recipes;
 
 use Api\Resources\Recipes;
+use Api\Resources\Dimensions;
 
 use \PhotoCake\Api\Arguments\Filter;
 
@@ -22,11 +23,11 @@ class Get extends \PhotoCake\Api\Method\Method
     {
         $result = array();
 
-        $list = Recipes::getInstance()->getBakeryRecipes
+        $recipesList = Recipes::getInstance()->getBakeryRecipes
                                             ($this->getParam('bakery_id'));
 
-        foreach ($list as $record) {
-            array_push($result, $record->jsonSerialize());
+        foreach ($recipesList as $recipe) {
+            array_push($result, $recipe->jsonSerialize());
         }
 
         return $result;
