@@ -2,6 +2,7 @@
 
 namespace Api\Resources;
 
+use Model\Cake;
 use Model\Dimension;
 use PhotoCake\App\Config;
 
@@ -28,6 +29,31 @@ class Cakes extends \Api\Resources\Resource
     }
 
     /**
+     * @param \Model\Cake $cake
+     */
+    public function saveCake(\Model\Cake $cake) {
+        $this->getCollection('cakes')->update($cake);
+    }
+
+    /**
+     * @param string $id
+     * @return Cake
+     */
+    public function getById($id) {
+        return $this->getCollection('cakes')->fetch($id);
+    }
+
+    /**
+     * @param int $count
+     * @return \Iterator
+     */
+    public function getPromotedCakes($count)
+    {
+        return $this->getCollection('cakes')
+                    ->fetchAll(array( 'is_promoted' => true ), $count);
+    }
+
+    /**
      * @param string $prefix
      * @param string $data
      * @return null|string
@@ -42,6 +68,7 @@ class Cakes extends \Api\Resources\Resource
 
         return null;
     }
+
 
     /**
      * @static

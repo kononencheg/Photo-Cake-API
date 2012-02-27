@@ -20,7 +20,7 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
             case 'bakeries': $result = new Bakery(); break;
             case 'recipes': $result = new Recipe(); break;
             case 'dimensions': $result = new Dimension(); break;
-
+            case 'cakes': $result = new Cake(); break;
         }
 
         if ($result !== null) {

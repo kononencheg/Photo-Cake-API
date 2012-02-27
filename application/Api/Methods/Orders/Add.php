@@ -102,6 +102,9 @@ class Add extends \PhotoCake\Api\Method\Method
             );
 
             $cake->setDimension($dimensions);
+
+            $cakes->saveCake($cake);
+
             return $cake;
         } else {
             $this->response

@@ -17,6 +17,7 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
      */
     protected $collection = 'cakes';
 
+
     /**
      * @var array
      */
@@ -26,6 +27,15 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
         'image_url' => 'string',
         'photo_url' => 'string',
         'dimension' => Dimension::NAME,
+
+        'is_promoted' => 'boolean',
+    );
+
+    /**
+     * @var array
+     */
+    protected $spanFields = array(
+        'orders' => array('image_url', 'photo_url', 'dimension', '_ref'),
     );
 
     /**
@@ -39,9 +49,9 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
     /**
      * @return string
      */
-    public function getContentMarkup()
+    public function getMarkup()
     {
-        return $this->get('content_markup');
+        return $this->get('markup');
     }
 
     /**
@@ -90,5 +100,21 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
     public function getDimension()
     {
         return $this->get('dimension');
+    }
+
+    /**
+     * @param boolean $isPromoted
+     */
+    public function setPromoted($isPromoted)
+    {
+        $this->set('is_promoted', $isPromoted);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPromoted()
+    {
+        return $this->get('is_promoted');
     }
 }
