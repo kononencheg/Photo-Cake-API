@@ -11,19 +11,11 @@ class Base64Echo extends \PhotoCake\Api\Method\Method
      * @var array
      */
     protected $arguments = array(
-        'data' => Filter::BASE64,
-        'type' => Filter::STRING,
-        'file_name' => Filter::STRING,
-        'is_downloading' => Filter::BOOLEAN,
+        'data' => array( Filter::BASE64, 'data' => array( null => 'Ошибка данных.' ) ),
+        'type' => array( Filter::STRING, 'data' => array( null => 'Тип данных не задан.' ) ),
+        'file_name' => array( Filter::STRING ),
+        'is_downloading' => array( Filter::BOOLEAN ),
     );
-
-    protected function filter()
-    {
-        $this->applyFilter(array(
-            'data' => array( null => 'Ошибка данных' ),
-            'type' => array( null => 'Тип данных не задан.' ),
-        ));
-    }
 
     /**
      * @return mixed

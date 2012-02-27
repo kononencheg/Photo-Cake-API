@@ -11,23 +11,12 @@ class UploadImage extends \PhotoCake\Api\Method\Method
      * @var array
      */
     protected $arguments = array(
-        'image' => Filter::BASE64,
-        'upload_url' => Filter::URL,
-        'album_id' => Filter::STRING,
-        'session_key' => Filter::STRING,
-        'album_id' => Filter::STRING,
+        'image' => array( Filter::BASE64, array( null => 'Ошибка данных изображения' ) ),
+        'upload_url' => array( Filter::URL, array( null => 'Url сервера загрузки не задан.', false => 'Url сервера загрузки имеет неверный формат.' )),
+        'album_id' => array( Filter::STRING ),
+        'session_key' => array( Filter::STRING ),
+        'album_id' => array( Filter::STRING ),
     );
-
-    protected function filter()
-    {
-        $this->applyFilter(array(
-            'image' => array( null => 'Ошибка данных изображения' ),
-            'upload_url' => array(
-                null => 'Url сервера загрузки не задан.',
-                false => 'Url сервера загрузки имеет неверный формат.'
-            ),
-        ));
-    }
 
     /**
      * @return mixed
