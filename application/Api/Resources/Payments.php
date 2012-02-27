@@ -57,21 +57,14 @@ class Payments extends \Api\Resources\Resource
     /**
      * @param \Model\Recipe $recipe
      * @param \Model\Dimension $dimension
-     * @return int
+     * @return float
      */
     public function getRecipePrice(\Model\Recipe $recipe,
                                    \Model\Dimension $dimension)
     {
-        $l = $recipe->getDimentionPricesCount();
-        $i = 0;
-
-        while ($i < $l) {
-            $price = $recipe->getDimentionPriceAt($i);
-            if ($price->getDimensionId() == $dimension->getId()){
-                return $price->getPrice();
-            }
-
-            $i++;
+        $price = $recipe->getDimensionPriceByWeight($dimension->getWeight());
+        if ($price !== null) {
+            return $price->getPrice();
         }
 
         return 0;

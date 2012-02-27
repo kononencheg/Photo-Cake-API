@@ -2,7 +2,7 @@
 
 namespace Api\Resources;
 
-use Model\Dimensions;
+use Model\Dimension;
 use PhotoCake\App\Config;
 
 class Cakes extends \Api\Resources\Resource
@@ -15,9 +15,9 @@ class Cakes extends \Api\Resources\Resource
      */
     public function createCake($image, $photo, \stdClass $markup)
     {
-
         $cake = $this->createRecord(\Model\Cake::NAME);
         $cake->setImageUrl($this->saveImage('cake_image_', $image));
+
         if (!empty($photo)) {
             $cake->setPhotoUrl($this->saveImage('cake_photo_', $photo));
         }

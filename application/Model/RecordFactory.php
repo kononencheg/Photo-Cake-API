@@ -45,12 +45,12 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
             case Admin::NAME: $result = new Admin(); break;
             case Bakery::NAME: $result = new Bakery(); break;
 
-            case City::NAME: return new City(); break;
-            case Cake::NAME: return new Cake(); break;
+            case City::NAME: $result = new City(); break;
+            case Cake::NAME: $result = new Cake(); break;
             case Order::NAME: $result = new Order(); break;
             case Recipe::NAME: $result = new Recipe(); break;
             case Client::NAME: $result = new Client(); break;
-            case Payment::NAME: return new Payment(); break;
+            case Payment::NAME: $result =  new Payment(); break;
             case Delivery::NAME: $result = new Delivery(); break;
             case Dimension::NAME: $result = new Dimension(); break;
             case DimensionPrice::NAME: $result = new DimensionPrice(); break;
@@ -87,6 +87,7 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
     {
         switch ($name) {
             case User::NAME:
+            case Cake::NAME:
             case Admin::NAME:
             case Bakery::NAME:
             case City::NAME:

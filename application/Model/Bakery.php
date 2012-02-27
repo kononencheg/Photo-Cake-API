@@ -32,13 +32,6 @@ class Bakery extends User
     }
 
     /**
-     * @var array
-     */
-    protected $spanFields = array(
-        'orders' => array('delivery_price', '_ref'),
-    );
-
-    /**
      * @param \Model\City $city
      */
     public function setCity(\Model\City $city)

@@ -100,11 +100,21 @@ class Payment extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
+     * @return float
+     */
+    public function getTotalPrice()
+    {
+        return $this->get('recipe_price') +
+                $this->get('delivery_price') +
+                $this->get('decoration_price');
+    }
+
+    /**
      * @param int $paymentMethod
      */
     public function setPaymentMethod($paymentMethod)
     {
-        $this->set('payment_type', $paymentMethod);
+        $this->set('payment_method', $paymentMethod);
     }
 
     /**
@@ -112,6 +122,6 @@ class Payment extends \PhotoCake\Db\Mongo\MongoRecord
      */
     public function getPaymentMethod()
     {
-        return $this->get('payment_type');
+        return $this->get('payment_method');
     }
 }

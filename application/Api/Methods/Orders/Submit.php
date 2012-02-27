@@ -42,7 +42,7 @@ class Submit extends \PhotoCake\Api\Method\Method
      */
     protected function filter()
     {
-        $this->applyFilter($this->arguments, array(
+        $this->applyFilter(array(
             'date' => 'testDate'
         ));
     }
@@ -71,15 +71,17 @@ class Submit extends \PhotoCake\Api\Method\Method
         $orders = Orders::getInstance();
 
         $order = $orders->getById($this->getParam('order_id'));
+
         if ($order !== null) {
             $order->setClient($this->createClient());
             $order->setDelivery($this->createDelivery());
-            $order->setStatus(Order::ORDER_SUBMIT);
+            $order->setStatus(Order::ORDER_NEW);
 
             $orders->updatePaymentMethod
                 ($order, $this->getParam('payment_method'));
 
             $orders->saveOrder($order);
+            $orders->emailOrder($order);
 
             return $order->jsonSerialize();
         }

@@ -104,11 +104,12 @@ class Recipe extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @return array
+     * @param $weight
+     * @return DimensionPrice
      */
-    public function getDimensionPrices()
+    public function getDimensionPriceByWeight($weight)
     {
-        return $this->get('dimension_prices');
+        return $this->getByKey('dimension_prices', $weight);
     }
 
     /**

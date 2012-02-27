@@ -90,17 +90,17 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     );
 
     /**
-     * @param Bakery $bakeryId
+     * @param Bakery $bakery
      */
-    public function setBakery(Bakery $bakeryId)
+    public function setBakery(Bakery $bakery)
     {
-        $this->set('bakery', $bakeryId);
+        $this->set('bakery', $bakery);
     }
 
     /**
      * @return Bakery
      */
-    public function getBakeryId()
+    public function getBakery()
     {
         return $this->get('bakery');
     }

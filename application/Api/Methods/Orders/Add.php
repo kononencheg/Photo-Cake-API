@@ -24,7 +24,7 @@ class Add extends \PhotoCake\Api\Method\Method
         'cake_weight'       => array( Filter::FLOAT,  array( null => 'Ошибка данных торта.' ) ),
         'cake_markup_json'  => array( Filter::JSON,   array( null => 'Ошибка данных торта.' ) ),
         'cake_image_base64' => array( Filter::BASE64, array( null => 'Ошибка данных торта.' ) ),
-        'cake_photo_base64' => array( Filter::BASE64, array( null => 'Ошибка данных торта.' ) ),
+        'cake_photo_base64' => array( Filter::BASE64 ),
     );
 
     /**
@@ -42,6 +42,7 @@ class Add extends \PhotoCake\Api\Method\Method
             $order = $orders->createOrder();
 
             $order->setPayment($this->createPayment($bakery, $cake, $recipe));
+
             $order->setBakery($bakery);
             $order->setRecipe($recipe);
             $order->setCake($cake);
@@ -87,8 +88,7 @@ class Add extends \PhotoCake\Api\Method\Method
      */
     private function createCake()
     {
-        $dimensions = Dimensions::getInstance()->getByWeight(
-            $this->getParam('bakery_id'),
+        $dimensions = Dimensions::getInstance()->getOne(
             $this->getParam('cake_weight'),
             $this->getParam('cake_shape')
         );
@@ -96,14 +96,16 @@ class Add extends \PhotoCake\Api\Method\Method
         if ($dimensions !== null) {
             $cakes = Cakes::getInstance();
             $cake = $cakes->createCake(
-                $this->getParam('cake_photo_base64'),
                 $this->getParam('cake_image_base64'),
+                $this->getParam('cake_photo_base64'),
                 $this->getParam('cake_markup_json')
             );
 
             $cake->setDimension($dimensions);
-
             return $cake;
+        } else {
+            $this->response
+                ->addError('Торт имеет некорректные размеры.', 100);
         }
 
         return null;
