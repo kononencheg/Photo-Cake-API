@@ -21,9 +21,9 @@ class UploadImage extends \PhotoCake\Api\Method\Method
     protected function filter()
     {
         $this->applyFilter(array(
-            'image' => array( NULL => 'Ошибка данных изображения' ),
+            'image' => array( null => 'Ошибка данных изображения' ),
             'upload_url' => array(
-                NULL => 'Url сервера загрузки не задан.',
+                null => 'Url сервера загрузки не задан.',
                 false => 'Url сервера загрузки имеет неверный формат.'
             ),
         ));
@@ -37,12 +37,12 @@ class UploadImage extends \PhotoCake\Api\Method\Method
         $fileName = Config::get('files.folder') . 
         				uniqid('temp_cake_image_') . '.jpg';
 
-        file_put_contents($fileName, $this->param('image'), FILE_BINARY);
+        file_put_contents($fileName, $this->getParam('image'), FILE_BINARY);
 
         $params = array(
-            'application_key' => $this->param('application_key'),
-            'session_key' => $this->param('session_key'),
-            'aid' => $this->param('album_id'),
+            'application_key' => $this->getParam('application_key'),
+            'session_key' => $this->getParam('session_key'),
+            'aid' => $this->getParam('album_id'),
             'method' => 'photos.upload',
             'photos' => '[{}]',
             'file' => md5_file($fileName)
@@ -57,7 +57,7 @@ class UploadImage extends \PhotoCake\Api\Method\Method
 
         $request = curl_init();
         curl_setopt(
-            $request, CURLOPT_URL, $this->param('upload_url') . '?' .
+            $request, CURLOPT_URL, $this->getParam('upload_url') . '?' .
                 join('&', $getParams)
         );
 
@@ -84,7 +84,7 @@ class UploadImage extends \PhotoCake\Api\Method\Method
 
         sort($plainParams);
 
-        return md5(join('', $plainParams) . $this->param('secret_key'));
+        return md5(join('', $plainParams) . $this->getParam('secret_key'));
     }
 }
 

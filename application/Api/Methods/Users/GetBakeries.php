@@ -1,8 +1,10 @@
 <?php
 
-namespace Api\Methods\Bakeries;
+namespace Api\Methods\Users;
 
-class GetList extends \PhotoCake\Api\Method\Method
+use Api\Resources\Users;
+
+class GetBakeries extends \PhotoCake\Api\Method\Method
 {
     /**
      * @return mixed
@@ -11,9 +13,7 @@ class GetList extends \PhotoCake\Api\Method\Method
     {
         $result = array();
 
-        $bakeries = new \Api\Resources\Bakeries();
-        $list = $bakeries->getList();
-
+        $list = Users::getInstance()->getBakeries();
         foreach ($list as $record) {
             array_push($result, $record->jsonSerialize());
         }
@@ -21,3 +21,4 @@ class GetList extends \PhotoCake\Api\Method\Method
         return $result;
     }
 }
+

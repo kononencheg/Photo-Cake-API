@@ -2,37 +2,81 @@
 
 namespace Api\Resources;
 
-class Recipes extends \PhotoCake\Api\Resource\DbResource
+use Model\Recipe;
+
+class Recipes extends \Api\Resources\Resource
 {
-    private $collection = NULL;
-
-    public function __construct()
+    /**
+     * @param string $bakeryId
+     * @param string $name
+     * @param string $desc
+     * @param string $imageUrl
+     * @return \Model\Recipe
+     */
+    public function createRecipe($bakeryId, $name, $desc, $imageUrl)
     {
-        parent::__construct();
+        $recipe = $this->createRecord(Recipe::NAME);
+        $recipe->setBakeryId($bakeryId);
+        $recipe->setName($name);
+        $recipe->setDesc($desc);
+        $recipe->setImageUrl($imageUrl);
 
-        $this->collection = $this->getCollection('recipes');
+        return $recipe;
     }
 
     /**
-     * @param $name
-     * @return \PhotoCake\Db\Record\RecordInterface
+     * @param \Model\Recipe $recipe
      */
-    public function getByName($bakeryId, $name)
+    public function saveRecipe(Recipe $recipe)
     {
-        $condition = array(
-            'bakery_id' => $bakeryId,
-            'name' => $name
-        );
-
-        return $this->collection->fetchOne($condition);
+        $this->getCollection('recipes')->update($recipe);
     }
 
-    public function getList($bakeryId)
+    /**
+     * @param string $id
+     * @return \Model\Recipe
+     */
+    public function getById($id)
     {
-        $condition = array(
-            'bakery_id' => $bakeryId
-        );
+        return $this->getCollection('recipes')->fetch($id);
+    }
 
-        return $this->collection->fetchAll($condition);
+    /**
+     * @param string $id
+     */
+    public function removeById($id)
+    {
+        $this->getCollection('recipes')->removeAll(array(
+            '_id' => new \MongoId($id)
+        ));
+    }
+
+    /**
+     * @param string $bakeryId
+     * @return \Iterator
+     */
+    public function getBakeryRecipes($bakeryId)
+    {
+        return $this->getCollection('recipes')->fetchAll(array(
+            'bakery_id' => $bakeryId
+        ));
+    }
+
+    /**
+     * @static
+     * @var \Api\Resources\Recipes
+     */
+    private static $instance;
+
+    /**
+     * @static
+     * @return \Api\Resources\Recipes
+     */
+    public static function getInstance() {
+        if (!isset(self::$instance)) {
+            self::$instance = new Recipes();
+        }
+
+        return self::$instance;
     }
 }

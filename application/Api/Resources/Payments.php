@@ -2,50 +2,12 @@
 
 namespace Api\Resources;
 
+use Model\Payment;
 
-class Payments implements \PhotoCake\Api\Resource\ResourceInterface
+
+class Payments extends \Api\Resources\Resource
 {
-    public function createCampaignPayment($price)
-    {
-        $payment = new \Model\Payment();
-
-        $payment->set('deco_price', 0);
-        $payment->set('recipe_price', 0);
-        $payment->set('delivery_price', 0);
-        $payment->set('total_price', $price);
-
-        $payment->set('payment_type', \Model\Payment::CASH);
-
-        return $payment;
-    }
-
-    public function createPayment(\stdClass $markup,
-                                \Model\Recipe $recipe,
-                                \Model\Bakery $bakery)
-    {
-        $payment = new \Model\Payment();
-
-        $decoPrice = $this->getDecorationPrice($markup);
-        $recipePrice = $this->getRecipePrice($markup, $recipe);
-        $deliveryPrice = $bakery->get('delivery_price');
-
-        $payment->set('deco_price', $decoPrice);
-        $payment->set('recipe_price', $recipePrice);
-        $payment->set('delivery_price', $deliveryPrice);
-        $payment->set
-            ('total_price', $decoPrice + $recipePrice + $deliveryPrice);
-
-        $payment->set('payment_type', \Model\Payment::CASH);
-
-        return $payment;
-    }
-
-    private function getRecipePrice(\stdClass $markup, \Model\Recipe $recipe)
-    {
-        return $recipe->get('price') * $markup->dimensions->mass;
-    }
-
-    private function getDecorationPrice(\stdClass $markup)
+    public function getDecorationPrice(\stdClass $markup)
     {
         $result = 0;
 
@@ -89,4 +51,52 @@ class Payments implements \PhotoCake\Api\Resource\ResourceInterface
                 return 0;
         }
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @param \Model\Recipe $recipe
+     * @param \Model\Dimension $dimension
+     * @return float
+     */
+    public function getRecipePrice(\Model\Recipe $recipe,
+                                   \Model\Dimension $dimension)
+    {
+        $price = $recipe->getDimensionPriceByWeight($dimension->getWeight());
+        if ($price !== null) {
+            return $price->getPrice();
+        }
+
+        return 0;
+    }
+
+    /**
+     * @return \Model\Payment
+     */
+    public function createPayment()
+    {
+        $payment = $this->createRecord(Payment::NAME);
+        $payment->setPaymentMethod(Payment::METHOD_NONE);
+
+        return $payment;
+    }
+
+    /**
+     * @static
+     * @var \Api\Resources\Payments
+     */
+    private static $instance;
+
+    /**
+     * @static
+     * @return \Api\Resources\Payments
+     */
+    public static function getInstance() {
+        if (!isset(self::$instance)) {
+            self::$instance = new Payments();
+        }
+
+        return self::$instance;
+    }
+
 }
