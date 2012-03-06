@@ -95,8 +95,8 @@ class Submit extends \PhotoCake\Api\Method\Method
                 $order->setDelivery($this->createDelivery());
                 $order->setStatus(Order::ORDER_NEW);
 
-                $orders->updatePaymentMethod
-                            ($order, $this->getParam('payment_method'));
+                $order->getPayment()
+                      ->setPaymentMethod($order, $this->getParam('payment_method'));
 
                 $orders->emailOrder($order);
                 $orders->saveOrder($order);
