@@ -3,6 +3,7 @@
 namespace Api\Methods\Users;
 
 use Api\Resources\Users;
+use Model\User;
 
 class GetBakeries extends \PhotoCake\Api\Method\Method
 {

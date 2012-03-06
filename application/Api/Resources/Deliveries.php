@@ -31,6 +31,7 @@ class Deliveries extends \Api\Resources\Resource
     public function filterDate($date, $time)
     {
         $resultDate = \DateTime::createFromFormat('d.m.Y', $date);
+
         if ($resultDate !== false) {
             $resultDate->setTime(0, 0);
 

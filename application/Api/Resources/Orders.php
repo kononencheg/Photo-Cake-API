@@ -22,15 +22,6 @@ class Orders extends \Api\Resources\Resource
 
     /**
      * @param \Model\Order $order
-     * @param int $method
-     */
-    public function updatePaymentMethod(Order $order, $method)
-    {
-        $order->getPayment()->setPaymentMethod($method);
-    }
-
-    /**
-     * @param \Model\Order $order
      */
     public function saveOrder(\Model\Order $order)
     {
@@ -53,7 +44,7 @@ class Orders extends \Api\Resources\Resource
     public function getBakeryOrders($bakeryId)
     {
         return $this->getCollection('orders')
-                    ->fetchAll(array( 'bakery_id' => $bakeryId ));
+                    ->fetchAll(array( 'bakery._ref' => new \MongoId($bakeryId) ));
     }
 
     /**

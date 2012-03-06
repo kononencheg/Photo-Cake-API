@@ -43,21 +43,21 @@ class Submit extends \PhotoCake\Api\Method\Method
     protected function filter()
     {
         $this->applyFilter(array(
-            'date' => 'testDate'
+            'delivery_date' => 'testDate'
         ));
     }
 
     protected function testDate($date)
     {
         $timestamp = Deliveries::getInstance()->filterDate
-                                        ($date, $this->getParam('time'));
+                                    ($date, $this->getParam('delivery_time'));
 
         if ($timestamp === -1) {
             $this->response->addParamError
-                ('date', 'Срок обработки заказа минимум двое суток.');
+                ('delivery_date', 'Срок обработки заказа минимум двое суток.');
         } elseif ($timestamp === null) {
             $this->response->addParamError
-               ('date', 'Правильный формат даты "дд.мм.гггг".');
+               ('delivery_date', 'Правильный формат даты "дд.мм.гггг".');
         } else {
             $this->setParam('delivery_date', $timestamp);
         }
@@ -120,7 +120,6 @@ class Submit extends \PhotoCake\Api\Method\Method
             $this->getParam('delivery_comment'),
             $this->getParam('delivery_message')
         );
-
 
         return $delivery;
     }

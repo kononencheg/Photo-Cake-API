@@ -33,7 +33,8 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
 
             case 'orders.add': return new Orders\Add();
             case 'orders.submit': return new Orders\Submit();
-            case 'orders.get': return new Orders\Submit();
+            case 'orders.get': return new Orders\Get();
+            case 'orders.edit': return new Orders\Edit();
 
             // Recipes
 
