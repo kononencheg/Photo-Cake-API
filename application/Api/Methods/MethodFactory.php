@@ -12,9 +12,16 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
     {
         switch ($name) {
 
+            // Cities
+
+            case 'cities.add': return new Cities\Add();
+            case 'cities.get': return new Cities\Get();
+
             // Dimensions
 
+            case 'dimensions.add': return new Dimensions\Add();
             case 'dimensions.get': return new Dimensions\Get();
+            case 'dimensions.remove': return new Dimensions\Remove();
 
             // Users
 
@@ -44,6 +51,7 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
 
             case 'recipes.add': return new Recipes\Add();
             case 'recipes.get': return new Recipes\Get();
+            case 'recipes.edit': return new Recipes\Edit();
             case 'recipes.remove': return new Recipes\Remove();
 
             // Others

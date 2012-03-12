@@ -2,7 +2,9 @@
 
 namespace Api\Methods\Cities;
 
-class GetList extends \PhotoCake\Api\Method\Method
+use Api\Resources\Cities;
+
+class Get extends \PhotoCake\Api\Method\Method
 {
     /**
      * @return mixed
@@ -11,8 +13,8 @@ class GetList extends \PhotoCake\Api\Method\Method
     {
         $result = array();
 
-        $cities = new \Api\Resources\Cities();
-        $list = $cities->getList();
+        $cities = Cities::getInstance();
+        $list = $cities->getAll();
 
         foreach ($list as $record) {
             array_push($result, $record->jsonSerialize());

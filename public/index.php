@@ -19,7 +19,7 @@ use PhotoCake\Http\Response\Format\FormatFactory;
 Config::load(INI_FILE);
 
 $config = new MongoConfiguration();
-$config->setDb('cakes');
+$config->setDb(Config::get('mongo.db'));
 $config->setRecordFactory(new RecordFactory());
 
 ConfigurationManager::getInstance()->setDefaultConfiguration($config);

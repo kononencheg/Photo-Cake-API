@@ -70,6 +70,16 @@ class Dimensions extends \Api\Resources\Resource
     }
 
     /**
+     * @param string $id
+     */
+    public function removeById($id)
+    {
+        $this->getCollection('dimensions')->removeAll(array(
+            '_id' => new \MongoId($id)
+        ));
+    }
+
+    /**
      * @static
      * @var \Api\Resources\Dimensions
      */
