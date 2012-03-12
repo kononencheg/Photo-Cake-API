@@ -27,7 +27,8 @@ class Bakery extends User
     {
         return array(
             'city' => City::NAME,
-            'delivery_price' => 'float'
+            'delivery_price' => 'float',
+            'available_dimension_ids' => 'array',
         );
     }
 
@@ -61,5 +62,19 @@ class Bakery extends User
     public function getDeliveryPrice()
     {
         return $this->get('delivery_price');
+    }
+
+    /**
+     * @param array $dimensionIds
+     */
+    public function setAvailableDimensionIds(array $dimensionIds) {
+        $this->set('available_dimension_ids', $dimensionIds);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAvailableDimension() {
+        return $this->get('available_dimension_ids');
     }
 }

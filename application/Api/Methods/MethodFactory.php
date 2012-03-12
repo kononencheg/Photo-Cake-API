@@ -20,10 +20,14 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
 
             case 'users.addAdmin': return new Users\AddAdmin();
             case 'users.addBakery': return new Users\AddBakery();
+
             case 'users.signIn': return new Users\SignIn();
             case 'users.signOut': return new Users\SignOut();
+
             case 'users.getCurrent': return new Users\GetCurrent();
             case 'users.getBakeries': return new Users\GetBakeries();
+
+            case 'users.editBakery': return new Users\EditBakery();
 
             // Cakes
 

@@ -49,7 +49,7 @@ class Users extends \Api\Resources\Resource
 
     /**
      * @param string $id
-     * @return \Model\User
+     * @return \Model\User|\Model\Bakery
      */
     public function getById($id)
     {
