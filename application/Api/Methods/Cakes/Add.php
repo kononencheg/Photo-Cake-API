@@ -14,11 +14,11 @@ class Add extends \PhotoCake\Api\Method\Method
      * @var array
      */
     protected $arguments = array(
-        'shape'        => array( Filter::STRING, array( null => 'Не задан размер торта.' ) ),
-        'weight'       => array( Filter::FLOAT,  array( null => 'Не задана масса торта.' ) ),
-        'markup_json'  => array( Filter::JSON,   array( null => 'Ошибка орбатортки разметки.' ) ),
-        'image_base64' => array( Filter::BASE64, array( null => 'Ошибка орбатортки изображения.' ) ),
-        'photo_base64' => array( Filter::BASE64 ),
+        'shape'  => array( Filter::STRING, array( null => 'Не задан размер торта.' ) ),
+        'weight' => array( Filter::FLOAT,  array( null => 'Не задана масса торта.' ) ),
+        'markup' => array( Filter::JSON,   array( null => 'Ошибка орбатортки разметки.' ) ),
+        'image'  => array( Filter::BASE64, array( null => 'Ошибка орбатортки изображения.' ) ),
+        'photo'  => array( Filter::BASE64 ),
     );
 
     /**
@@ -43,7 +43,6 @@ class Add extends \PhotoCake\Api\Method\Method
             );
 
             $cake->setDimension($dimension);
-
             $cakes->saveCake($cake);
 
             $result = $cake->jsonSerialize();

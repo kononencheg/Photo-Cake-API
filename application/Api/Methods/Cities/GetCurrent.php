@@ -13,7 +13,7 @@ class GetCurrent extends \PhotoCake\Api\Method\Method
      */
     protected function apply()
     {
-        $ip = '213.190.224.48'; // $_SERVER['REMOTE_ADDR']
+        $ip = $_SERVER['REMOTE_ADDR'];
 
         $request = curl_init();
 

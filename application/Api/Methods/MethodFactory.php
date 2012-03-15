@@ -39,6 +39,7 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
 
             // Cakes
 
+            case 'cakes.add': return new Cakes\Add();
             case 'cakes.getPromoted': return new Cakes\GetPromoted();
 
             // Orders
