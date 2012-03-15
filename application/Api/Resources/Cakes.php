@@ -17,10 +17,7 @@ class Cakes extends \Api\Resources\Resource
     public function createCake($image, $photo, \stdClass $markup)
     {
         $cake = $this->createRecord(\Model\Cake::NAME);
-        $imageUrl = $this->saveImage('cake_image_', $image);
-        var_dump($imageUrl);
-
-        $cake->setImageUrl($imageUrl);
+        $cake->setImageUrl($this->saveImage('cake_image_', $image));
 
         if (!empty($photo)) {
             $cake->setPhotoUrl($this->saveImage('cake_photo_', $photo));
