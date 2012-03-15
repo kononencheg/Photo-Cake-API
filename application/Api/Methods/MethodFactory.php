@@ -16,6 +16,7 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
 
             case 'cities.add': return new Cities\Add();
             case 'cities.get': return new Cities\Get();
+            case 'cities.getCurrent': return new Cities\GetCurrent();
 
             // Dimensions
 
