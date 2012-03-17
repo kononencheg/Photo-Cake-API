@@ -7,10 +7,15 @@ use Model\Payment;
 
 class Payments extends \Api\Resources\Resource
 {
-    public function getDecorationPrice(\stdClass $markup)
+    /**
+     * @param string $markupJson
+     * @return int
+     */
+    public function getDecorationPrice($markupJson)
     {
         $result = 0;
 
+        $markup = json_decode($markupJson);
         if (isset($markup->content->deco)) {
             $deco = $markup->content->deco;
 

@@ -12,14 +12,13 @@ class Clients extends \Api\Resources\Resource
      * @param string $networkId
      * @return \Model\Client
      */
-    public function createClient($email, $name, $phone, $network, $networkId)
+    public function createClient($email, $name, $phone, $network)
     {
         $client = $this->createRecord(\Model\Client::NAME);
         $client->setEmail($email);
         $client->setName($name);
         $client->setPhone($phone);
         $client->setNetwork($network);
-        $client->setNetworkId($networkId);
 
         return $client;
     }

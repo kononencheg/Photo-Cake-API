@@ -28,7 +28,7 @@ class Deliveries extends \Api\Resources\Resource
      * @param int $time
      * @return int
      */
-    public function filterDate($date, $time)
+    public function testDate($date, $time)
     {
         $resultDate = \DateTime::createFromFormat('d.m.Y', $date);
 

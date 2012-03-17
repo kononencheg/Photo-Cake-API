@@ -37,9 +37,9 @@ class Add extends \PhotoCake\Api\Method\Method
             $cakes = Cakes::getInstance();
 
             $cake = $cakes->createCake(
-                $this->getParam('image_base64'),
-                $this->getParam('photo_base64'),
-                $this->getParam('markup_json')
+                $this->getParam('image'),
+                $this->getParam('photo'),
+                $this->getParam('markup')
             );
 
             $cake->setDimension($dimension);

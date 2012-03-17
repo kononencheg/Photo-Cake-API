@@ -10,30 +10,23 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
      */
     const NAME = 'order';
 
+    /**
+     * @const
+     * @var int
+     */
+    const ORDER_NEW = 0;
 
     /**
      * @const
      * @var int
      */
-    const ORDER_INACTIVE = 0;
+    const ORDER_APPROVED = 1;
 
     /**
      * @const
      * @var int
      */
-    const ORDER_NEW = 1;
-
-    /**
-     * @const
-     * @var int
-     */
-    const ORDER_APPROVED = 2;
-
-    /**
-     * @const
-     * @var int
-     */
-    const ORDER_DECLINED = 3;
+    const ORDER_DECLINED = 2;
 
 
     /**

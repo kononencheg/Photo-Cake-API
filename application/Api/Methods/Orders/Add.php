@@ -8,6 +8,10 @@ use Api\Resources\Dimensions;
 use Api\Resources\Users;
 use Api\Resources\Cakes;
 use Api\Resources\Payments;
+use Api\Resources\Deliveries;
+use Api\Resources\Clients;
+
+use Model\Order;
 
 use PhotoCake\Api\Arguments\Filter;
 
@@ -19,43 +23,86 @@ class Add extends \PhotoCake\Api\Method\Method
     protected $arguments = array(
         'bakery_id' => array( Filter::STRING, array( null => 'Ошибка выбора кондитерской.' ) ),
         'recipe_id' => array( Filter::STRING, array( null => 'Ошибка выбора рецепта.' ) ),
+        'cake_id'   => array( Filter::STRING, array( null => 'Ошибка выбора торта.' ) ),
 
-        'cake_shape'        => array( Filter::STRING, array( null => 'Ошибка данных торта.' ) ),
-        'cake_weight'       => array( Filter::FLOAT,  array( null => 'Ошибка данных торта.' ) ),
-        'cake_markup_json'  => array( Filter::JSON,   array( null => 'Ошибка данных торта.' ) ),
-        'cake_image_base64' => array( Filter::BASE64, array( null => 'Ошибка данных торта.' ) ),
-        'cake_photo_base64' => array( Filter::BASE64 ),
+        'client_email'   => array( Filter::EMAIL,  array( null => 'Email не задан.', false => 'Email введен не правильно.' ) ),
+        'client_phone'   => array( Filter::PHONE,  array( null => 'Телефон не задан.', false => 'Телефон введен неправильно.' ) ),
+        'client_name'    => array( Filter::STRING, array( null => 'Имя не задано.' ) ),
+        'client_network' => array( Filter::INTEGER ),
+
+        'delivery_time'    => array( Filter::INTEGER, array( -1 => 'Время не задано.' ) ),
+        'delivery_date'    => array( Filter::STRING,  array( null => 'Дата не задана.' ) ),
+        'delivery_address' => array( Filter::STRING,  array( null => 'Адрес не задан.' ) ),
+        'delivery_message' => array( Filter::STRING ),
+        'delivery_comment' => array( Filter::STRING ),
+
+        'payment_method' => array( Filter::INTEGER,  array( null => 'Ошибка данных оплаты.' ) ),
     );
+
+    /**
+     * @return void
+     */
+    protected function filter()
+    {
+        $this->applyFilter(array( 'delivery_date' => 'testDate' ));
+    }
+
+    /**
+     * @param string $date
+     */
+    protected function testDate($date)
+    {
+        $timestamp = Deliveries::getInstance()->testDate
+            ($date, $this->getParam('delivery_time'));
+
+        if ($timestamp === -1) {
+            $this->response->addParamError
+                ('delivery_date', 'Срок обработки заказа минимум двое суток.');
+        } elseif ($timestamp === null) {
+            $this->response->addParamError
+                ('delivery_date', 'Правильный формат даты "дд.мм.гггг".');
+        } else {
+            $this->setParam('delivery_date', $timestamp);
+        }
+    }
 
     /**
      * @return mixed
      */
     protected function apply()
     {
+        $result = null;
+
         $orders = Orders::getInstance();
 
         $recipe = Recipes::getInstance()->getById($this->getParam('recipe_id'));
         $bakery = Users::getInstance()->getById($this->getParam('bakery_id'));
-        $cake = $this->createCake();
+        $cake = Cakes::getInstance()->getById($this->getParam('cake_id'));
 
         if ($recipe !== null && $cake !== null && $bakery !== null) {
+            $payment = $this->createPayment($bakery, $cake, $recipe);
+            $delivery = $this->createDelivery();
+            $client = $this->createClient();
+
             $order = $orders->createOrder();
 
-            $order->setPayment($this->createPayment($bakery, $cake, $recipe));
-
+            $order->setPayment($payment);
             $order->setBakery($bakery);
             $order->setRecipe($recipe);
             $order->setCake($cake);
+            $order->setClient($client);
+            $order->setDelivery($delivery);
 
             $orders->saveOrder($order);
+            $orders->emailOrder($order);
 
-            return $order->jsonSerialize();
+            $result = $order->jsonSerialize();
         } else {
             $this->response
                  ->addError('Ошибка обработки данных заказа.', 100);
         }
 
-        return null;
+        return $result;
     }
 
     /**
@@ -71,47 +118,47 @@ class Add extends \PhotoCake\Api\Method\Method
 
         $payment = $payments->createPayment();
 
+        $payment->setPaymentMethod($this->getParam('payment_method'));
         $payment->setDeliveryPrice($bakery->getDeliveryPrice());
         $payment->setRecipePrice(
             $payments->getRecipePrice($recipe, $cake->getDimension())
         );
 
         $payment->setDecorationPrice(
-            $payments->getDecorationPrice($this->getParam('cake_markup_json'))
+            $payments->getDecorationPrice($cake->getMarkup())
         );
 
         return $payment;
     }
 
     /**
-     * @return \Model\Cake
+     * @return \Model\Delivery
      */
-    private function createCake()
+    private function createDelivery()
     {
-        $dimensions = Dimensions::getInstance()->getOne(
-            $this->getParam('cake_weight'),
-            $this->getParam('cake_shape')
+        $delivery = Deliveries::getInstance()->createDelivery(
+            $this->getParam('delivery_date'),
+            $this->getParam('delivery_address'),
+            $this->getParam('delivery_comment'),
+            $this->getParam('delivery_message')
         );
 
-        if ($dimensions !== null) {
-            $cakes = Cakes::getInstance();
-            $cake = $cakes->createCake(
-                $this->getParam('cake_image_base64'),
-                $this->getParam('cake_photo_base64'),
-                $this->getParam('cake_markup_json')
-            );
+        return $delivery;
+    }
 
-            $cake->setDimension($dimensions);
+    /**
+     * @return \Model\Client
+     */
+    private function createClient()
+    {
+        $client = Clients::getInstance()->createClient(
+            $this->getParam('client_email'),
+            $this->getParam('client_name'),
+            $this->getParam('client_phone'),
+            $this->getParam('client_network')
+        );
 
-            $cakes->saveCake($cake);
-
-            return $cake;
-        } else {
-            $this->response
-                ->addError('Торт имеет некорректные размеры.', 100);
-        }
-
-        return null;
+        return $client;
     }
 
 }

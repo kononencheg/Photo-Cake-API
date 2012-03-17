@@ -43,7 +43,6 @@ class Client extends \PhotoCake\Db\Mongo\MongoRecord
         'phone' => 'string',
 
         'network' => 'int',
-        'network_id' => 'string',
     );
 
     /**
@@ -100,22 +99,6 @@ class Client extends \PhotoCake\Db\Mongo\MongoRecord
     public function getNetwork()
     {
         return $this->get('network');
-    }
-
-    /**
-     * @param string $networkId
-     */
-    public function setNetworkId($networkId)
-    {
-        $this->set('network_id', $networkId);
-    }
-
-    /**
-     * @return string
-     */
-    public function getNetworkId()
-    {
-        return $this->get('network_id');
     }
 
     /**
