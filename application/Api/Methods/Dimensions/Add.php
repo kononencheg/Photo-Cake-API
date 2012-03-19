@@ -10,6 +10,7 @@ use Api\Resources\Cakes;
 use Api\Resources\Payments;
 
 use Model\User;
+use Model\Dimension;
 
 use PhotoCake\Api\Arguments\Filter;
 
@@ -18,14 +19,16 @@ class Add extends \PhotoCake\Api\Method\Method
     /**
      * @var array
      */
-    protected $accessList = array( User::ROLE_ADMIN );
+    protected $accessList = array( User::ROLE_ADMIN, User::ROLE_BAKERY );
 
     /**
      * @var array
      */
     protected $arguments = array(
+        'bakery_id' => array( Filter::STRING, array( null => 'Ошибка выбора кондитерской.' ) ),
+
         'shape'         => array( Filter::STRING,  array( null => 'Параметр не задан.' ) ),
-        'ratio'         => array( Filter::FLOAT,   array( null => 'Параметр не задан.', '-1' => 'Неверный масштаб' ) ),
+        'size'          => array( Filter::FLOAT,   array( null => 'Параметр не задан.', '-1' => 'Неверный масштаб' ) ),
         'weight'        => array( Filter::FLOAT,   array( null => 'Параметр не задан.', '-1' => 'Неверный вес' ) ),
         'persons_count' => array( Filter::INTEGER, array( null => 'Параметр не задан.', '-1' => 'Неверное число людей' ) ),
     );
@@ -38,9 +41,10 @@ class Add extends \PhotoCake\Api\Method\Method
         $dimensions = Dimensions::getInstance();
 
         $dimension = $dimensions->createDimension(
+            $this->getParam('bakery_id'),
             $this->getParam('shape'),
             $this->getParam('weight'),
-            $this->getParam('ratio'),
+            round(Dimension::BASE_SIZE / $this->getParam('size') * 10) / 10,
             $this->getParam('persons_count')
         );
 

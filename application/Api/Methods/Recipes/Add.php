@@ -9,12 +9,19 @@ use Api\Resources\Users;
 use Api\Resources\Cakes;
 use Api\Resources\Payments;
 
+use Model\User;
+
 use PhotoCake\Api\Arguments\Filter;
 
 use PhotoCake\App\Config;
 
 class Add extends \PhotoCake\Api\Method\Method
 {
+    /**
+     * @var array
+     */
+    protected $accessList = array( User::ROLE_ADMIN, User::ROLE_BAKERY );
+
     /**
      * @var array
      */

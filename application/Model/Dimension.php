@@ -6,6 +6,14 @@ use \PhotoCake\Db\Record\AbstractRecord;
 
 class Dimension extends \PhotoCake\Db\Mongo\MongoRecord
 {
+
+
+    /**
+     * @const
+     * @var int
+     */
+    const BASE_SIZE = 9;
+
     /**
      * @const
      * @var string
@@ -14,13 +22,13 @@ class Dimension extends \PhotoCake\Db\Mongo\MongoRecord
 
     /**
      * @const
-     * @var int
+     * @var string
      */
     const SHAPE_ROUND = 'round';
 
     /**
      * @const
-     * @var int
+     * @var string
      */
     const SHAPE_RECT = 'rect';
 
@@ -28,11 +36,28 @@ class Dimension extends \PhotoCake\Db\Mongo\MongoRecord
      * @var array
      */
     protected $options = array(
+        'bakery_id' => 'string',
         'shape' => 'string',
         'ratio' => 'float',
         'weight' => 'float',
         'persons_count' => 'int',
     );
+
+    /**
+     * @param string $bakeryId
+     */
+    public function setBakeryId($bakeryId)
+    {
+        $this->set('bakery_id', $bakeryId);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBakeryId()
+    {
+        return $this->get('bakery_id');
+    }
 
     /**
      * @param string $shape

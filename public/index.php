@@ -38,7 +38,14 @@ $response->setFormat($format);
 if ($method !== null) {
     $method->setAcl(new Acl());
     $method->setResponse($response);
-    $method->call($request->get());
+
+    try {
+        $method->call($request->get());
+    } catch (Exception $error) {
+        $response->addError($error->getMessage(), 500);
+    }
+
+
 } else {
     $response->addError('Unknown method calling', 404);
 }

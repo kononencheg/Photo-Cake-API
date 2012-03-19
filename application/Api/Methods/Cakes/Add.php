@@ -14,8 +14,7 @@ class Add extends \PhotoCake\Api\Method\Method
      * @var array
      */
     protected $arguments = array(
-        'shape'  => array( Filter::STRING, array( null => 'Не задан размер торта.' ) ),
-        'weight' => array( Filter::FLOAT,  array( null => 'Не задана масса торта.' ) ),
+        'dimension_id' => array( Filter::STRING, array( null => 'Не задан идентификатор размера.' ) ),
         'markup' => array( Filter::JSON,   array( null => 'Ошибка орбатортки разметки.' ) ),
         'image'  => array( Filter::BASE64, array( null => 'Ошибка орбатортки изображения.' ) ),
         'photo'  => array( Filter::BASE64 ),
@@ -28,10 +27,8 @@ class Add extends \PhotoCake\Api\Method\Method
     {
         $result = null;
 
-        $dimension = Dimensions::getInstance()->getOne(
-            $this->getParam('weight'),
-            $this->getParam('shape')
-        );
+        $dimension = Dimensions::getInstance()->getById
+                                        ($this->getParam('dimension_id'));
 
         if ($dimension !== null) {
             $cakes = Cakes::getInstance();

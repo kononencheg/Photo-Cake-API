@@ -15,9 +15,11 @@ class Dimensions extends \Api\Resources\Resource
      * @param int $personsCount
      * @return \Model\Dimension
      */
-    public function createDimension($shape, $weight, $ratio, $personsCount)
+    public function createDimension($bakery_id, $shape, $weight, $ratio,
+                                    $personsCount)
     {
         $dimension = $this->createRecord(Dimension::NAME);
+        $dimension->setBakeryId($bakery_id);
         $dimension->setShape($shape);
         $dimension->setWeight($weight);
         $dimension->setRatio($ratio);
@@ -49,24 +51,23 @@ class Dimensions extends \Api\Resources\Resource
     }
 
     /**
+     * @param string $bakeryId
      * @return \Iterator
      */
-    public function getDimensions()
+    public function getBakeryDimensions($bakeryId)
     {
-        return $this->getCollection('dimensions')->fetchAll();
+        return $this->getCollection('dimensions')->fetchAll(array(
+            'bakery_id' => $bakeryId
+        ));
     }
 
     /**
-     * @param float $weight
-     * @param string $shape
+     * @param string $id
      * @return \Model\Dimension
      */
-    public function getOne($weight, $shape)
+    public function getById($id)
     {
-        return $this->getCollection('dimensions')->fetchOne(array(
-            'shape' => $shape,
-            'weight' => $weight
-        ));
+        return $this->getCollection('dimensions')->fetch($id);
     }
 
     /**
