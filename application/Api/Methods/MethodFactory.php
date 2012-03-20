@@ -24,6 +24,12 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
             case 'dimensions.get': return new Dimensions\Get();
             case 'dimensions.remove': return new Dimensions\Remove();
 
+            // Decorations
+
+            case 'decorations.add': return new Decorations\Add();
+            case 'decorations.get': return new Decorations\Get();
+            case 'decorations.remove': return new Decorations\Remove();
+
             // Users
 
             case 'users.addAdmin': return new Users\AddAdmin();

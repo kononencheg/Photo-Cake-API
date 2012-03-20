@@ -7,7 +7,7 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
     /**
      * @param string $collection
      * @param array $value
-     * @return Admin|Bakery|City|Order|null
+     * @return Admin|Bakery|Cake|City|Decoration|Dimension|Order|Recipe|null
      */
     public function createForCollection($collection, array $value)
     {
@@ -17,9 +17,10 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
             case 'users': $result = $this->createUser($value['role']); break;
             case 'cities': $result = new City(); break;
             case 'orders': $result = new Order(); break;
-            case 'bakeries': $result = new Bakery(); break;
             case 'recipes': $result = new Recipe(); break;
             case 'dimensions': $result = new Dimension(); break;
+            case 'decorations': $result = new Decoration(); break;
+
             case 'cakes': $result = new Cake(); break;
         }
 
@@ -33,7 +34,7 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
     /**
      * @param $name
      * @param array $value
-     * @return Admin|Bakery|Cake|City|Client|Delivery|Dimension|DimensionPrice|Order|Payment|Recipe|null
+     * @return Admin|Bakery|Cake|City|Client|Delivery|Dimension|DimensionPrice|Order|Payment|Recipe|Decoration|DecorationPrice|null
      */
     public function createByName($name, array $value)
     {
@@ -53,7 +54,9 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
             case Payment::NAME: $result =  new Payment(); break;
             case Delivery::NAME: $result = new Delivery(); break;
             case Dimension::NAME: $result = new Dimension(); break;
+            case Decoration::NAME: $result = new Decoration(); break;
             case DimensionPrice::NAME: $result = new DimensionPrice(); break;
+            case DecorationPrice::NAME: $result = new DecorationPrice(); break;
         }
 
         if ($result !== null) {
@@ -98,6 +101,7 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
             case Delivery::NAME:
             case Dimension::NAME:
             case DimensionPrice::NAME:
+            case DecorationPrice::NAME:
                 return true;
         }
 

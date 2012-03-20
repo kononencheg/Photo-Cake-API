@@ -28,7 +28,7 @@ class Add extends \PhotoCake\Api\Method\Method
         'bakery_id' => array( Filter::STRING, array( null => 'Ошибка выбора кондитерской.' ) ),
 
         'shape'         => array( Filter::STRING,  array( null => 'Параметр не задан.' ) ),
-        'size'          => array( Filter::FLOAT,   array( null => 'Параметр не задан.', '-1' => 'Неверный масштаб' ) ),
+        'size'          => array( Filter::FLOAT,   array( null => 'Параметр не задан.', '-1' => 'Неверный размер' ) ),
         'weight'        => array( Filter::FLOAT,   array( null => 'Параметр не задан.', '-1' => 'Неверный вес' ) ),
         'persons_count' => array( Filter::INTEGER, array( null => 'Параметр не задан.', '-1' => 'Неверное число людей' ) ),
     );
@@ -44,7 +44,7 @@ class Add extends \PhotoCake\Api\Method\Method
             $this->getParam('bakery_id'),
             $this->getParam('shape'),
             $this->getParam('weight'),
-            round(Dimension::BASE_SIZE / $this->getParam('size') * 10) / 10,
+            Dimension::BASE_SIZE / $this->getParam('size'),
             $this->getParam('persons_count')
         );
 

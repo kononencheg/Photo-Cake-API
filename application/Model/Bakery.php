@@ -4,6 +4,8 @@ namespace Model;
 
 use PhotoCake\Db\Mongo\MongoRecord;
 
+use Model\DecorationPrice;
+
 class Bakery extends User
 {
     /**
@@ -28,7 +30,9 @@ class Bakery extends User
         return array(
             'city' => City::NAME,
             'delivery_price' => 'float',
-            'available_dimension_ids' => 'array',
+            'decoration_prices' =>  array( 'type' => DecorationPrice::NAME,
+                                           'relation' => MongoRecord::RELATION_MANY,
+                                           'key_field' => 'decoration_id' ),
         );
     }
 
@@ -65,16 +69,26 @@ class Bakery extends User
     }
 
     /**
-     * @param array $dimensionIds
+     * @return DecorationPrice
      */
-    public function setAvailableDimensionIds(array $dimensionIds) {
-        $this->set('available_dimension_ids', $dimensionIds);
+    public function getDecorationPrices()
+    {
+        return $this->get('decoration_prices');
     }
 
     /**
-     * @return array
+     * @param DecorationPrice $decorationPrice
      */
-    public function getAvailableDimension() {
-        return $this->get('available_dimension_ids');
+    public function addDecorationPrice(DecorationPrice $decorationPrice)
+    {
+        $this->add('decoration_prices', $decorationPrice);
+    }
+
+    /**
+     * @param DecorationPrice $decorationPrice
+     */
+    public function removeDecorationPrice(DecorationPrice $decorationPrice)
+    {
+        $this->remove('decoration_prices', $decorationPrice);
     }
 }
