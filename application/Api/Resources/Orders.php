@@ -43,8 +43,11 @@ class Orders extends \Api\Resources\Resource
      */
     public function getBakeryOrders($bakeryId)
     {
-        return $this->getCollection('orders')
-                    ->fetchAll(array( 'bakery._ref' => new \MongoId($bakeryId) ));
+        return $this->getCollection('orders')->fetchAll(
+            array( 'bakery._ref' => new \MongoId($bakeryId) ),
+            null, null,
+            array( 'id' => -1 )
+        );
     }
 
     /**
