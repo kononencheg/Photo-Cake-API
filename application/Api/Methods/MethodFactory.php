@@ -12,6 +12,10 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
     {
         switch ($name) {
 
+            // Config
+
+            case 'config.get': return new Config\Get();
+
             // Cities
 
             case 'cities.add': return new Cities\Add();

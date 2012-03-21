@@ -101,8 +101,7 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
             case Delivery::NAME:
             case Dimension::NAME:
             case DimensionPrice::NAME:
-            case DecorationPrice::NAME:
-                return true;
+            case DecorationPrice::NAME: return true;
         }
 
         return false;
