@@ -69,6 +69,15 @@ class Bakery extends User
     }
 
     /**
+     * @param string $decorationId
+     * @return DecorationPrice
+     */
+    public function getDecorationPrice($decorationId)
+    {
+        return $this->getByKey('decoration_prices', $decorationId);
+    }
+
+    /**
      * @return DecorationPrice
      */
     public function getDecorationPrices()

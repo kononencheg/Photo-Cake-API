@@ -125,7 +125,7 @@ class Add extends \PhotoCake\Api\Method\Method
         );
 
         $payment->setDecorationPrice(
-            $payments->getDecorationPrice($cake->getMarkup())
+            $payments->getDecorationPrice($bakery, $cake->getMarkup())
         );
 
         return $payment;

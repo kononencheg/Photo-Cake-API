@@ -8,10 +8,11 @@ use Model\Payment;
 class Payments extends \Api\Resources\Resource
 {
     /**
+     * @param \Model\Bakery $bakery
      * @param string $markupJson
      * @return int
      */
-    public function getDecorationPrice($markupJson)
+    public function getDecorationPrice(\Model\Bakery $bakery, $markupJson)
     {
         $result = 0;
 
@@ -20,7 +21,7 @@ class Payments extends \Api\Resources\Resource
             $deco = $markup->content->deco;
 
             foreach ($deco as $item) {
-                $result += $this->getDecorationItemPrice($item->name);
+                $result += $bakery->getDecorationPrice($item->name)->getPrice();
             }
         }
 

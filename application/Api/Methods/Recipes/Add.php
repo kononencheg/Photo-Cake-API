@@ -28,9 +28,9 @@ class Add extends \PhotoCake\Api\Method\Method
     protected $arguments = array(
         'bakery_id' => array( Filter::STRING, array( null => 'Ошибка выбора кондитерской.' ) ),
 
-        'recipe_name' => array( Filter::STRING, array( null => 'Ошибка имени рецепта.' ) ),
-        'recipe_desc' => array( Filter::STRING, array( null => 'Ошибка описания рецепта.' ) ),
-        'recipe_image' => array( Filter::FILE, array( null => 'Ошибка картинки рецепта.' ) ),
+        'name' => array( Filter::STRING, array( null => 'Ошибка имени рецепта.' ) ),
+        'desc' => array( Filter::STRING, array( null => 'Ошибка описания рецепта.' ) ),
+        'image' => array( Filter::FILE, array( null => 'Ошибка картинки рецепта.' ) ),
     );
 
     /**
@@ -38,7 +38,7 @@ class Add extends \PhotoCake\Api\Method\Method
      */
     protected function apply()
     {
-        $imageInfo = $this->getParam('recipe_image');
+        $imageInfo = $this->getParam('image');
         if ($imageInfo['error'] === UPLOAD_ERR_OK) {
 
             $imageName = uniqid('recipe_image_') . '.jpg';
@@ -50,8 +50,8 @@ class Add extends \PhotoCake\Api\Method\Method
 
                 $recipe = $recipes->createRecipe(
                     $this->getParam('bakery_id'),
-                    $this->getParam('recipe_name'),
-                    $this->getParam('recipe_desc'),
+                    $this->getParam('name'),
+                    $this->getParam('desc'),
                     Config::get('files.url') . $imageName
                 );
 
@@ -61,12 +61,12 @@ class Add extends \PhotoCake\Api\Method\Method
 
             } else {
                 $this->response
-                     ->addParamError('recipe_image', 'Ошибка обработки файла');
+                     ->addParamError('image', 'Ошибка обработки файла');
             }
 
         } else {
             $this->response
-                 ->addParamError('recipe_image', 'Ошибка загрузки файла');
+                 ->addParamError('image', 'Ошибка загрузки файла');
         }
 
         return null;

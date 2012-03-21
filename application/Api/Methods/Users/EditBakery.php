@@ -39,6 +39,7 @@ class EditBakery extends \PhotoCake\Api\Method\Method
                 if (!empty($prices)) {
                     foreach ($prices as $decorationId => $decorationPrice) {
                         if (isset($decorationPrices[$decorationId])) {
+                            $decorationPrice->setPrice($decorationPrices[$decorationId]);
                             unset($decorationPrices[$decorationId]);
                         } else {
                             $bakery->removeDecorationPrice($decorationPrice);
