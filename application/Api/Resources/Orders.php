@@ -81,8 +81,6 @@ class Orders extends \Api\Resources\Resource
 
         $bakery = $order->getBakery();
 
-        var_dump($cake);
-
         return '<html>
             <head>
                 <title>Новый Заказ</title>
