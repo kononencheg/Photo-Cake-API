@@ -74,32 +74,48 @@ class Add extends \PhotoCake\Api\Method\Method
         $result = null;
 
         $orders = Orders::getInstance();
+        $cakes = Cakes::getInstance();
 
         $recipe = Recipes::getInstance()->getById($this->getParam('recipe_id'));
         $bakery = Users::getInstance()->getById($this->getParam('bakery_id'));
-        $cake = Cakes::getInstance()->getById($this->getParam('cake_id'));
+        $cake = $cakes->getById($this->getParam('cake_id'));
 
-        if ($recipe !== null && $cake !== null && $bakery !== null) {
-            $payment = $this->createPayment($bakery, $cake, $recipe);
-            $delivery = $this->createDelivery();
-            $client = $this->createClient();
+        if ($this->getParam('delivery_address') === 'to title') {
 
-            $order = $orders->createOrder();
+            if ($cake->getPhotoUrl() !== null) {
+                $markup = json_decode($cake->getMarkup());
+                $markup->content->photo->image_source = 'network';
+                $markup->content->photo->photo_url = $cake->getPhotoUrl();
 
-            $order->setPayment($payment);
-            $order->setBakery($bakery);
-            $order->setRecipe($recipe);
-            $order->setCake($cake);
-            $order->setClient($client);
-            $order->setDelivery($delivery);
+                $cake->setMarkup(json_encode($markup));
+            }
 
-            $orders->saveOrder($order);
-            $orders->emailOrder($order);
+            $cake->setPromoted(true);
+            $cakes->saveCake($cake);
 
-            $result = $order->jsonSerialize();
         } else {
-            $this->response
-                 ->addError('Ошибка обработки данных заказа.', 100);
+            if ($recipe !== null && $cake !== null && $bakery !== null) {
+                $payment = $this->createPayment($bakery, $cake, $recipe);
+                $delivery = $this->createDelivery();
+                $client = $this->createClient();
+
+                $order = $orders->createOrder();
+
+                $order->setPayment($payment);
+                $order->setBakery($bakery);
+                $order->setRecipe($recipe);
+                $order->setCake($cake);
+                $order->setClient($client);
+                $order->setDelivery($delivery);
+
+                $orders->saveOrder($order);
+                $orders->emailOrder($order);
+
+                $result = $order->jsonSerialize();
+            } else {
+                $this->response
+                    ->addError('Ошибка обработки данных заказа.', 100);
+            }
         }
 
         return $result;

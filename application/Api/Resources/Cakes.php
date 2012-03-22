@@ -50,7 +50,7 @@ class Cakes extends \Api\Resources\Resource
     public function getPromotedCakes($count)
     {
         return $this->getCollection('cakes')->fetchAll
-            (array( 'is_promoted' => true ), $count, 0, array( 'id' => -1 ));
+            (array( 'is_promoted' => true ), $count, 0, array( '_id' => -1 ));
     }
 
     /**
