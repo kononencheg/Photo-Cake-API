@@ -66,7 +66,8 @@ class Orders extends \Api\Resources\Resource
 
         $headers  = 'MIME-Version: 1.0' ." \r\n" .
                     'Content-type: text/html; charset=utf-8' . "\r\n" .
-                    'From: Фото на торте <visser@fotonatorte.ru>' . "\r\n";
+                    'From: Фото на торте <visser@fotonatorte.ru>' . "\r\n" .
+                    'Reply-To: visser@fotonatorte.ru' . "\r\n";
 
         return mail($to, 'Новый заказ', $this->getMailMarkup($order), $headers);
     }
