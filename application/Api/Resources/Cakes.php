@@ -19,7 +19,11 @@ class Cakes extends \Api\Resources\Resource
         $cake = $this->createRecord(\Model\Cake::NAME);
         $cake->setImageUrl($this->saveImage('cake_image_', $image));
 
-        if (!empty($photo)) {
+        if (isset($markup->content->photo) &&
+            $markup->content->photo->image_source === 'network') {
+
+            $cake->setPhotoUrl($markup->content->photo->photo_url);
+        } elseif (!empty($photo)) {
             $cake->setPhotoUrl($this->saveImage('cake_photo_', $photo));
         }
 
