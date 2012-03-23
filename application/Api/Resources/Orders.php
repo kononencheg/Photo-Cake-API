@@ -48,7 +48,7 @@ class Orders extends \Api\Resources\Resource
         return $this->getCollection('orders')->fetchAll(
             array( 'bakery._ref' => new \MongoId($bakeryId) ),
             null, null,
-            array( 'id' => -1 )
+            array( '_id' => -1 )
         );
     }
 
