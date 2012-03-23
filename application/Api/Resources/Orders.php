@@ -3,6 +3,8 @@
 namespace Api\Resources;
 
 use Model\Order;
+use Mail;
+use PEAR;
 
 class Orders extends \Api\Resources\Resource
 {
@@ -58,18 +60,30 @@ class Orders extends \Api\Resources\Resource
     {
         $to = implode(', ', array(
             'kononencheg@gmail.com',
-            'fotonatorte@gmail.com',
+            'visser@fotonatorte.ru',
             $order->getClient()->getEmail(),
             $order->getBakery()->getEmail()
         ));
 
+        $headers = array (
+            'From' => 'noreply@fotonatorte.ru ',
+            'To' => $to,
+            'Subject' => 'Новый заказ',
+            'Content-type' => 'text/html; charset=utf-8',
+            'MIME-Version' => '1.0'
+        );
 
-        $headers  = 'MIME-Version: 1.0' ." \r\n" .
-                    'Content-type: text/html; charset=utf-8' . "\r\n" .
-                    'From: Фото на торте <visser@fotonatorte.ru>' . "\r\n" .
-                    'Reply-To: visser@fotonatorte.ru' . "\r\n";
+        $smtp = Mail::factory('smtp', array(
+            'host' => 'ssl://smtp.gmail.com',
+            'port' => '465',
+            'auth' => true,
+            'username' => 'kononencheg@gmail.com',
+            'password' => 'umnz picg ugpx eblu',
+        ));
 
-        return mail($to, 'Новый заказ', $this->getMailMarkup($order), $headers);
+        $mail = $smtp->send($to, $headers, $this->getMailMarkup($order));
+
+        return !PEAR::isError($mail);
     }
 
     private function getMailMarkup(\Model\Order $order)

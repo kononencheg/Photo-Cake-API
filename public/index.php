@@ -51,5 +51,3 @@ if ($method !== null) {
 }
 
 $response->render();
-
-?>
