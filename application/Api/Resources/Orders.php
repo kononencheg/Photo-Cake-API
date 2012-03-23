@@ -54,6 +54,15 @@ class Orders extends \Api\Resources\Resource
 
     /**
      * @param \Model\Order $order
+     * @return string
+     */
+    public function printOrder(\Model\Order $order)
+    {
+        return $this->getMailMarkup($order);
+    }
+
+    /**
+     * @param \Model\Order $order
      * @return bool
      */
     public function emailOrder(\Model\Order $order)
