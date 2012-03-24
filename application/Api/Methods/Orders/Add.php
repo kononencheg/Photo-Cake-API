@@ -25,7 +25,7 @@ class Add extends \PhotoCake\Api\Method\Method
         'recipe_id' => array( Filter::STRING, array( null => 'Ошибка выбора рецепта.' ) ),
         'cake_id'   => array( Filter::STRING, array( null => 'Подождите пока загрузится торт.' ) ),
 
-        'client_email'   => array( Filter::EMAIL,  array( null => 'Email не задан.', false => 'Email введен не правильно.' ) ),
+        'client_email'   => array( Filter::EMAIL/*,  array( null => 'Email не задан.', false => 'Email введен не правильно.' )*/ ),
         'client_phone'   => array( Filter::PHONE,  array( null => 'Телефон не задан.', false => 'Телефон введен неправильно.' ) ),
         'client_name'    => array( Filter::STRING, array( null => 'Имя не задано.' ) ),
         'client_network' => array( Filter::INTEGER ),
