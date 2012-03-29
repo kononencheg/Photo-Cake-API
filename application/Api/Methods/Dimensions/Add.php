@@ -48,7 +48,18 @@ class Add extends \PhotoCake\Api\Method\Method
             $this->getParam('persons_count')
         );
 
-        $dimensions->saveDimension($dimension);
+        try {
+            $dimensions->saveDimension($dimension);
+        } catch (\Exception $error) {
+            switch ($error->getCode()) {
+                case 11000: {
+                    $this->response->addError('Размер с такими параметрами уже существует!', 100);
+                    break;
+                }
+                default: $this->response->addError('Ошибка записи в базу!', 100);
+            }
+        }
+
 
         return $dimension->jsonSerialize();
     }
