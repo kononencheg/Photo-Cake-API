@@ -70,9 +70,13 @@ class Orders extends \Api\Resources\Resource
         $to = implode(', ', array(
             'kononencheg@gmail.com',
             'visser@fotonatorte.ru',
-            $order->getClient()->getEmail(),
             $order->getBakery()->getEmail()
         ));
+
+        $clientEmail = $order->getClient()->getEmail();
+        if ($clientEmail !== null) {
+            $to .= ', ' . $clientEmail;
+        }
 
         $headers = array (
             'From' => 'noreply@fotonatorte.ru ',
