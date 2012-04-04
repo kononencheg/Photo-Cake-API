@@ -40,6 +40,16 @@ class Orders extends \Api\Resources\Resource
     }
 
     /**
+     * @param float $transactionId
+     * @return boolean
+     */
+    public function checkTransactionId($transactionId) {
+        return $transactionId > 0 && $this->getCollection('orders')->fetchOne(
+            array( 'payment.transaction_id' => $transactionId )
+        ) === null;
+    }
+
+    /**
      * @param string $bakeryId
      * @return \Iterator
      */

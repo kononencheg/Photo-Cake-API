@@ -45,6 +45,7 @@ class Payment extends \PhotoCake\Db\Mongo\MongoRecord
      */
     protected $options = array(
         'payment_method' => 'int',
+        'transaction_id' => 'string',
 
         'decoration_price' => 'float',
         'delivery_price' => 'float',
@@ -123,5 +124,21 @@ class Payment extends \PhotoCake\Db\Mongo\MongoRecord
     public function getPaymentMethod()
     {
         return $this->get('payment_method');
+    }
+
+    /**
+     * @param string $transactionId
+     */
+    public function setTransactionId($transactionId)
+    {
+        $this->set('transaction_id', $transactionId);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransactionId()
+    {
+        return $this->get('transaction_id');
     }
 }
