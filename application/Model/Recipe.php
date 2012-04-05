@@ -104,7 +104,7 @@ class Recipe extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @param $weight
+     * @param float $weight
      * @return DimensionPrice
      */
     public function getDimensionPriceByWeight($weight)
