@@ -39,9 +39,7 @@ class PaymentCallback extends \PhotoCake\Api\Method\Method
             $orderId = $this->getParam('product_code');
             $order = $orders->getById($orderId);
 
-            if ($order !== null &&
-                $order->getPayment()->getTotalPrice() <= $this->getParam('amount')) {
-
+            if ($order !== null) {
                 $order->getPayment()->setPaymentMethod(Payment::METHOD_OK);
                 $order->getPayment()->setTransactionId($transactionId);
                 $order->setPaymentStatus(Order::PAYMENT_PAID);
@@ -52,9 +50,12 @@ class PaymentCallback extends \PhotoCake\Api\Method\Method
             }
         }
 
-        header('invocation-error: 3');
+        header('invocation-error: 1001');
 
-        return null;
+        return '<?xml version="1.0" encoding="UTF-8"?>
+                <ns2:error_response xmlns:ns2="http://api.forticom.com/1.0/"><error_code>1001</error_code>
+                    <error_msg>CALLBACK_INVALID_PAYMENT : Payment is invalid and can not be processed</error_msg>
+                </ns2:error_response>';
     }
 }
 

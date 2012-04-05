@@ -28,6 +28,11 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
      */
     const ORDER_DECLINED = 2;
 
+    /**
+     * @const
+     * @var int
+     */
+    const DELIVERY_NONE = -1;
 
     /**
      * @const
@@ -177,6 +182,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     {
         return $this->get('delivery_status');
     }
+
 
     /**
      * @param Recipe $recipe

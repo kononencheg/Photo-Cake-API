@@ -44,9 +44,11 @@ class Orders extends \Api\Resources\Resource
      * @return boolean
      */
     public function checkTransactionId($transactionId) {
-        return $transactionId > 0 && $this->getCollection('orders')->fetchOne(
+        $orders = $this->getCollection('orders')->fetchOne(
             array( 'payment.transaction_id' => $transactionId )
-        ) === null;
+        );
+
+        return $transactionId > 0 && $orders === null;
     }
 
     /**
