@@ -2,20 +2,25 @@
 
 namespace Api\Resources;
 
+use Model\Delivery;
+
 class Deliveries extends \Api\Resources\Resource
 {
 
     /**
      * @param int $date
+     * @param int $type
      * @param string $address
      * @param string $comment
      * @param string $message
      * @return \Model\Delivery
      */
-    public function createDelivery($date, $address, $comment, $message)
+    public function createDelivery($type, $date, $address, $comment,
+                                   $message)
     {
         $delivery = $this->createRecord(\Model\Delivery::NAME);
         $delivery->setDate($date);
+        $delivery->setType($type);
         $delivery->setAddress($address);
         $delivery->setComment($comment);
         $delivery->setMessage($message);

@@ -29,12 +29,20 @@ class Bakery extends User
     {
         return array(
             'city' => City::NAME,
+            'address' => 'string',
             'delivery_price' => 'float',
             'decoration_prices' =>  array( 'type' => DecorationPrice::NAME,
                                            'relation' => MongoRecord::RELATION_MANY,
                                            'key_field' => 'decoration_id' ),
         );
     }
+
+    /**
+     * @var array
+     */
+    protected $spanFields = array(
+        'orders' => array('city', 'address', 'delivery_price', '_ref'),
+    );
 
     /**
      * @param \Model\City $city
@@ -50,6 +58,22 @@ class Bakery extends User
     public function getCity()
     {
         return $this->get('city');
+    }
+
+    /**
+     * @param string $address
+     */
+    public function setAddress($address)
+    {
+        $this->set('address', $address);
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->get('address');
     }
 
     /**

@@ -12,6 +12,7 @@ use Api\Resources\Deliveries;
 use Api\Resources\Clients;
 
 use Model\Order;
+use Model\Delivery;
 
 use PhotoCake\Api\Arguments\Filter;
 
@@ -30,9 +31,10 @@ class Add extends \PhotoCake\Api\Method\Method
         'client_name'    => array( Filter::STRING, array( null => 'Имя не задано.' ) ),
         'client_network' => array( Filter::INTEGER ),
 
+        'delivery_is_pickup' => array( Filter::BOOLEAN ),
         'delivery_time'    => array( Filter::INTEGER, array( -1 => 'Время не задано.' ) ),
         'delivery_date'    => array( Filter::STRING,  array( null => 'Дата не задана.' ) ),
-        'delivery_address' => array( Filter::STRING,  array( null => 'Адрес не задан.' ) ),
+        'delivery_address' => array( Filter::STRING ),
         'delivery_message' => array( Filter::STRING ),
         'delivery_comment' => array( Filter::STRING ),
 
@@ -44,7 +46,10 @@ class Add extends \PhotoCake\Api\Method\Method
      */
     protected function filter()
     {
-        $this->applyFilter(array( 'delivery_date' => 'testDate' ));
+        $this->applyFilter(array(
+            'delivery_date' => 'testDate',
+            'delivery_address' => 'testAddress'
+        ));
     }
 
     /**
@@ -55,14 +60,26 @@ class Add extends \PhotoCake\Api\Method\Method
         $timestamp = Deliveries::getInstance()->testDate
             ($date, $this->getParam('delivery_time'));
 
-        if ($timestamp === -1) {
+        if ($timestamp === null) {
             $this->response->addParamError
                 ('delivery_date', 'Срок обработки заказа минимум двое суток.');
-        } elseif ($timestamp === null) {
+        } elseif ($timestamp === -1) {
             $this->response->addParamError
                 ('delivery_date', 'Правильный формат даты "дд.мм.гггг".');
         } else {
             $this->setParam('delivery_date', $timestamp);
+        }
+    }
+
+    /**
+     * @param string $address
+     */
+    protected function testAddress($address)
+    {
+
+        if ($address === null && !$this->getParam('delivery_is_pickup')) {
+            $this->response->addParamError
+                ('delivery_address', 'Адрес не задан.');
         }
     }
 
@@ -95,18 +112,14 @@ class Add extends \PhotoCake\Api\Method\Method
 
         } else {
             if ($recipe !== null && $cake !== null && $bakery !== null) {
-                $payment = $this->createPayment($bakery, $cake, $recipe);
-                $delivery = $this->createDelivery();
-                $client = $this->createClient();
-
                 $order = $orders->createOrder();
 
-                $order->setPayment($payment);
                 $order->setBakery($bakery);
                 $order->setRecipe($recipe);
                 $order->setCake($cake);
-                $order->setClient($client);
-                $order->setDelivery($delivery);
+                $order->setClient($this->createClient());
+                $order->setDelivery($this->createDelivery());
+                $order->setPayment($this->createPayment($bakery, $cake, $recipe));
 
                 $orders->saveOrder($order);
                 $orders->emailOrder($order);
@@ -153,6 +166,8 @@ class Add extends \PhotoCake\Api\Method\Method
     private function createDelivery()
     {
         $delivery = Deliveries::getInstance()->createDelivery(
+            $this->getParam('delivery_is_pickup') ?
+                Delivery::TYPE_PICKUP : Delivery::TYPE_COURIER,
             $this->getParam('delivery_date'),
             $this->getParam('delivery_address'),
             $this->getParam('delivery_comment'),

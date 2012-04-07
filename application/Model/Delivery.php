@@ -4,6 +4,19 @@ namespace Model;
 
 class Delivery extends \PhotoCake\Db\Mongo\MongoRecord
 {
+
+    /**
+     * @const
+     * @var int
+     */
+    const TYPE_COURIER = 0;
+
+    /**
+     * @const
+     * @var int
+     */
+    const TYPE_PICKUP = 1;
+
     /**
      * @const
      * @var string
@@ -15,6 +28,7 @@ class Delivery extends \PhotoCake\Db\Mongo\MongoRecord
      */
     protected $options = array(
         'date' => 'int',
+        'type' => 'int',
 
         'address' => 'string',
         'comment' => 'string',
@@ -68,6 +82,22 @@ class Delivery extends \PhotoCake\Db\Mongo\MongoRecord
     public function getDate()
     {
         return $this->get('date');
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType($type)
+    {
+        $this->set('type', $type);
+    }
+
+    /**
+     * @return int
+     */
+    public function getType()
+    {
+        return $this->get('type');
     }
 
     /**

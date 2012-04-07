@@ -3,6 +3,8 @@
 namespace Api\Resources;
 
 use Model\Order;
+use Model\Delivery;
+
 use Mail;
 use PEAR;
 
@@ -79,11 +81,8 @@ class Orders extends \Api\Resources\Resource
      */
     public function emailOrder(\Model\Order $order)
     {
-        $to = implode(', ', array(
-            'kononencheg@gmail.com',
-            'visser@fotonatorte.ru',
-            $order->getBakery()->getEmail()
-        ));
+        $to = 'kononencheg@gmail.com, visser@fotonatorte.ru, '.
+            $order->getBakery()->getEmail();
 
         $clientEmail = $order->getClient()->getEmail();
         if ($clientEmail !== null) {
@@ -117,10 +116,6 @@ class Orders extends \Api\Resources\Resource
         $payment = $order->getPayment();
         $cake = $order->getCake();
         $client = $order->getClient();
-        $delivery = $order->getDelivery();
-        $time = $delivery->getDate();
-
-        $bakery = $order->getBakery();
 
         return '<html>
             <head>
@@ -134,34 +129,59 @@ class Orders extends \Api\Resources\Resource
 
                 <h2>Параметры заказа</h2>
 
-                <table>
+                <table border="1">
                     <tbody>' .
-            $this->getRow('Ваше имя', $client->getName() .
-            $this->getRow('Ваш телефон', $client->getPhone()) .
-            $this->getRow('Город', $bakery->getCity()->getName()) .
-            $this->getRow('Адрес доставки', $delivery->getAddress())) .
-            $this->getRow('Дата доставки', date('d.m.Y (H:i', $time) . '-' .
-                                           date('H:i)', $time + 7200)).
 
-            $this->getRow('Торт', '<img alt="Торт" src="' . $cake->getImageUrl() . '" />') .
+            $this->getRow('Имя', $client->getName() .
+            $this->getRow('Телефон', $client->getPhone()) .
 
-            $this->getRow('Изображения для печати', ($cake->getPhotoUrl() ?
-                '<img alt="Изображения для печати" src="' . $cake->getPhotoUrl() . '" />' :
-                'Изображение отсутствует')) .
+            $this->getDeliveryRows($order) .
 
+            $this->getRow('Изображение торта', '<img src="' . $cake->getImageUrl() . '" />') .
+            $this->getRow('Изображения для печати', '<img src="' . $cake->getPhotoUrl() . '" alt="Изображение отсутствует" />')) .
             $this->getRow('Вес (кг.)', $cake->getDimension()->getWeight()) .
+
             $this->getRow('Рецепт', $recipe->getName()) .
             $this->getRow('Описание рецепта', $recipe->getDesc()) .
-            $this->getRow('Комментарий', $delivery->getComment()) .
-            $this->getRow('Записка', $delivery->getMessage()) .
-            $this->getRow('Цена с доставкой (руб.)', $payment->getTotalPrice()) .'
-                    </tbody>
+
+            $this->getRow('Цена с доставкой (руб.)', $payment->getTotalPrice()) .
+
+                  '</tbody>
                 </table>
 
                 <p> По указанному вами телефону в течении дня с вами свяжется
                     представитель компании для уточнения заказа. </p>
             </body>
         </html>';
+    }
+
+    private function getDeliveryRows(\Model\Order $order) {
+        $bakery = $order->getBakery();
+        $delivery = $order->getDelivery();
+        $time = $delivery->getDate();
+
+        $date = date('d.m.Y (H:i', $time) . '-' . date('H:i)', $time + 7200);
+
+        $result = $this->getRow('Город', $bakery->getCity()->getName());
+
+        switch ($delivery->getType()) {
+            case Delivery::TYPE_COURIER: {
+                $result .= $this->getRow('Адрес доставки', $delivery->getAddress()) .
+                           $this->getRow('Дата доставки', $date);
+                break;
+            }
+
+            case Delivery::TYPE_PICKUP: {
+                $result .= $this->getRow('Адрес пункта выдачи', $bakery->getAddress()) .
+                           $this->getRow('Дата выдачи', $date);
+                break;
+            }
+        }
+
+        $result .= $this->getRow('Комментарий к доставке', $delivery->getComment()) .
+                   $this->getRow('Записка к торту', $delivery->getMessage());
+
+        return $result;
     }
 
     private function getRow($name, $value)

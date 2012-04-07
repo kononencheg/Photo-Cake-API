@@ -32,12 +32,6 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
      * @const
      * @var int
      */
-    const DELIVERY_NONE = -1;
-
-    /**
-     * @const
-     * @var int
-     */
     const DELIVERY_NEW = 0;
 
     /**
@@ -88,7 +82,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     );
 
     /**
-     * @param Bakery $bakery
+     * @param \Model\Bakery $bakery
      */
     public function setBakery(Bakery $bakery)
     {
@@ -96,7 +90,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @return Bakery
+     * @return \Model\Bakery
      */
     public function getBakery()
     {
@@ -104,7 +98,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @param Cake $cake
+     * @param \Model\Cake $cake
      */
     public function setCake(Cake $cake)
     {
@@ -112,7 +106,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @return Cake
+     * @return \Model\Cake
      */
     public function getCake()
     {
@@ -120,7 +114,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @param Client $client
+     * @param \Model\Client $client
      */
     public function setClient(Client $client)
     {
@@ -128,7 +122,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @return Client
+     * @return \Model\Client
      */
     public function getClient()
     {
@@ -185,7 +179,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
 
 
     /**
-     * @param Recipe $recipe
+     * @param \Model\Recipe $recipe
      */
     public function setRecipe(Recipe $recipe)
     {
@@ -193,7 +187,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @return Recipe
+     * @return \Model\Recipe
      */
     public function getRecipe()
     {
@@ -201,7 +195,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @param Payment $payment
+     * @param \Model\Payment $payment
      */
     public function setPayment(Payment $payment)
     {
@@ -209,7 +203,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @return Payment
+     * @return \Model\Payment
      */
     public function getPayment()
     {
@@ -217,7 +211,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @param Delivery $delivery
+     * @param \Model\Delivery $delivery
      */
     public function setDelivery(Delivery $delivery)
     {
@@ -225,7 +219,7 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @return Delivery
+     * @return \Model\Delivery
      */
     public function getDelivery()
     {
