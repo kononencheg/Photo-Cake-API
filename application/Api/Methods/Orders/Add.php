@@ -113,13 +113,15 @@ class Add extends \PhotoCake\Api\Method\Method
         } else {
             if ($recipe !== null && $cake !== null && $bakery !== null) {
                 $order = $orders->createOrder();
+                $delivery = $this->createDelivery();
 
                 $order->setBakery($bakery);
                 $order->setRecipe($recipe);
                 $order->setCake($cake);
                 $order->setClient($this->createClient());
-                $order->setDelivery($this->createDelivery());
-                $order->setPayment($this->createPayment($bakery, $cake, $recipe));
+                $order->setDelivery($delivery);
+                $order->setPayment
+                    ($this->createPayment($bakery, $cake, $recipe, $delivery));
 
                 $orders->saveOrder($order);
                 $orders->emailOrder($order);
@@ -138,17 +140,22 @@ class Add extends \PhotoCake\Api\Method\Method
      * @param \Model\Bakery $bakery
      * @param \Model\Cake $cake
      * @param \Model\Recipe $recipe
+     * @param \Model\Delivery $delivery
      * @return \Model\Payment
      */
     private function createPayment(\Model\Bakery $bakery, \Model\Cake $cake,
-                                   \Model\Recipe $recipe)
+                                   \Model\Recipe $recipe, Delivery $delivery)
     {
         $payments = Payments::getInstance();
 
         $payment = $payments->createPayment();
 
         $payment->setPaymentMethod($this->getParam('payment_method'));
-        $payment->setDeliveryPrice($bakery->getDeliveryPrice());
+
+        if ($delivery->getType() !== Delivery::TYPE_PICKUP) {
+            $payment->setDeliveryPrice($bakery->getDeliveryPrice());
+        }
+
         $payment->setRecipePrice(
             $payments->getRecipePrice($recipe, $cake->getDimension())
         );

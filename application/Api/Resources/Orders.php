@@ -144,7 +144,7 @@ class Orders extends \Api\Resources\Resource
             $this->getRow('Рецепт', $recipe->getName()) .
             $this->getRow('Описание рецепта', $recipe->getDesc()) .
 
-            $this->getRow('Цена с доставкой (руб.)', $payment->getTotalPrice()) .
+            $this->getRow('Цена (руб.)', $payment->getTotalPrice()) .
 
                   '</tbody>
                 </table>
