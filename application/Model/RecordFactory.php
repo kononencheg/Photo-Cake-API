@@ -4,6 +4,27 @@ namespace Model;
 
 class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
 {
+
+    private $recordsMap = null;
+
+    function __construct() {
+        $this->recordsMap = array(
+            User::NAME => true,
+            Cake::NAME => true,
+            Admin::NAME => true,
+            Bakery::NAME => true,
+            City::NAME => true,
+            Order::NAME => true,
+            Recipe::NAME => true,
+            Client::NAME => true,
+            Payment::NAME => true,
+            Delivery::NAME => true,
+            Dimension::NAME => true,
+            DimensionPrice::NAME => true,
+            DecorationPrice::NAME => true,
+        );
+    }
+
     /**
      * @param string $collection
      * @param array $value
@@ -82,28 +103,13 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
         return null;
     }
 
+
     /**
      * @param string $name
      * @return boolean
      */
     function isRecordExist($name)
     {
-        switch ($name) {
-            case User::NAME:
-            case Cake::NAME:
-            case Admin::NAME:
-            case Bakery::NAME:
-            case City::NAME:
-            case Order::NAME:
-            case Recipe::NAME:
-            case Client::NAME:
-            case Payment::NAME:
-            case Delivery::NAME:
-            case Dimension::NAME:
-            case DimensionPrice::NAME:
-            case DecorationPrice::NAME: return true;
-        }
-
-        return false;
+        return $this->recordsMap[$name];
     }
 }
