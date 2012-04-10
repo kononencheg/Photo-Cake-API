@@ -110,6 +110,6 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
      */
     function isRecordExist($name)
     {
-        return $this->recordsMap[$name];
+        return isset($this->recordsMap[$name]);
     }
 }
