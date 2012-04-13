@@ -15,7 +15,16 @@ class EditBakery extends \PhotoCake\Api\Method\Method
     {
         return array(
             'id' => array( Filter::STRING, array( null => 'Идентификатор кондитерской не задан' ) ),
-            'decoration_prices' => array( Filter::ARR ),
+            'name' => array( Filter::STRING, array( null => 'Имя не задано' ) ),
+            'email' => array( Filter::EMAIL, array( null => 'Email не задан.', false => 'Email имеет не верный формат!') ),
+
+            'contact_name' => array( Filter::STRING ),
+            'contact_phone' => array( Filter::PHONE ),
+            'contact_email' => array( Filter::EMAIL ),
+
+            'address' => array( Filter::STRING, array( null => 'Адрес самовывоза не задан.' ) ),
+            'delivery_price' => array( Filter::FLOAT, array( null => 'Цена доставки не задана.' ) ),
+            'cash_extra_charge' => array( Filter::FLOAT, array( null => 'Наценка за наличную оплату не задана.' ) ),
         );
     }
 
@@ -27,30 +36,20 @@ class EditBakery extends \PhotoCake\Api\Method\Method
         $result = null;
 
         $users = Users::getInstance();
-        $decorations = Decorations::getInstance();
 
         $bakery = $users->getById($this->getParam('id'));
         if ($bakery !== null) {
 
-            $decorationPrices = $this->getParam('decoration_prices');
-            if ($decorationPrices !== null) {
-                $prices = $bakery->getDecorationPrices();
+            $bakery->setName($this->getParam('name'));
+            $bakery->setEmail($this->getParam('email'));
 
-                if (!empty($prices)) {
-                    foreach ($prices as $decorationId => $decorationPrice) {
-                        if (isset($decorationPrices[$decorationId])) {
-                            $decorationPrice->setPrice($decorationPrices[$decorationId]);
-                            unset($decorationPrices[$decorationId]);
-                        } else {
-                            $bakery->removeDecorationPrice($decorationPrice);
-                        }
-                    }
-                }
+            $bakery->setContactName($this->getParam('contact_name'));
+            $bakery->setContactPhone($this->getParam('contact_name'));
+            $bakery->setContactEmail($this->getParam('contact_email'));
 
-                foreach ($decorationPrices as $decorationId => $price) {
-                    $bakery->addDecorationPrice($decorations->createDecorationPrice($decorationId, $price));
-                }
-            }
+            $bakery->setAddress($this->getParam('address'));
+            $bakery->setDeliveryPrice($this->getParam('delivery_price'));
+            $bakery->setCashExtraCharge($this->getParam('cash_extra_charge'));
 
             $users->saveUser($bakery);
 

@@ -1,0 +1,232 @@
+\documentclass[a4paper,12pt]{report}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\lstset{ %
+flexiblecolumns=false,
+language=C++,                % choose the language of the code
+basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=none,           % adds a frame around the code
+tabsize=2,          % sets default tabsize to 2 spaces
+captionpos=b,           % sets the caption-position to bottom
+breaklines=false,        % sets automatic line breaking
+breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
+escapeinside={\%*}{*)}          % if you want to add a comment within your code
+}
+
+\graphicspath{{img/}}
+
+\newcommand{\fotocake}{ФОТОНАТОРТЕ.РФ}
+
+\title{{\Huge Инструкция по установке системы}}
+\author{\fotocake}
+
+\begin{document}
+
+	\maketitle
+	\tableofcontents
+
+	\chapter*{Введение}
+	\addcontentsline{toc}{chapter}{Введение}
+	
+		Данный документ представляет собой руководство по установке трех основных частетй системы \fotocake:
+		
+		\begin{itemize}
+			\item Приложение с конструктором тортов.			
+			\item Панель управления заказами и настройками конструктора.
+			\item Сервер предоставляющий REST интерфейс управления данными системы.
+		\end{itemize}
+		
+		Для установки Приложения и Панели управления вам потребуется веб-сервер. Например Apache, nginx или любой другой, поддерживающий выдачу статического контента.
+		
+		Для работы REST-сервера кроме веб-сервера необходим инетпретатор PHP поддерживающий интерфейс Fast-CGI, а также сервер базы данных MongoDB.
+		
+		Инструкции по установке веб-сервера, PHP и MongoDB можно найти на официальных сайтах.
+		
+		В качестве веб-сервера данном руководстве будет использоваться nginx.
+		
+		Так же для установки вам может понадобиться система контроля версий GIT.
+		
+	\chapter*{Приложение и Панель управления}
+	\addcontentsline{toc}{chapter}{Приложение и Панель управления}
+	
+		\section*{Приложение}
+		\addcontentsline{toc}{section}{Приложение}
+		
+			Для установки приложения из исходных кодов необходимо склонировать проект приложения из репозитория в необходимую папку (например \tt{/var/www/fotonatorte.ru}).
+		
+
+			\tt{\begin{lstlisting}[caption={Клонирование проекта}]
+git clone git@github.com:kononencheg/Photo-Cake.git /var/www/fotonatorte.ru
+			\end{lstlisting}}
+			
+	
+		Для использования  приложения нужно сконфигурировать веб-сервер для выдачи контента по выбранному адресу из папки \tt{public} проекта приложения.
+	
+		Добавим в файл \tt{nginx.conf} настроек сервера в блок \tt{http} следующие строки:
+	
+		\tt{\begin{lstlisting}[caption={Конфигурация веб-сервера приложения}]
+	server {
+		listen				fotonatorte.ru:80;
+		server_name		fotonatorte.ru;
+		
+		charset		utf-8;
+		
+		root	/var/www/fotonatorte.ru/public;
+	}
+		\end{lstlisting}}
+	
+		Если ваш сервер отвечает на запросы к \tt{fotonatorte.ru}  приложение будет доступно по адресу \tt{http://fotonatorte.ru/}.
+		
+		\section*{Панель управления}
+		\addcontentsline{toc}{section}{Панель управления}
+	
+			Установка Панели управления принципиально не отличается от установки Приложением и не будет описываться отдельно.
+
+	\chapter*{REST-сервер}
+	\addcontentsline{toc}{chapter}{REST-сервер}
+	
+		Для установки REST-сервера неоходимо, так же сначала склонировать проект по примеру из листинга 1. 
+		
+		Пример конфигурации веб-сервера для REST интерфейса (файл \tt{nginx.conf}):
+		
+		\tt{\begin{lstlisting}[caption={Конфигурация REST-сервера}]
+server {
+	listen          api.fotonatorte.ru:80;
+	server_name     api.fotonatorte.ru;
+
+	charset     utf-8;
+
+	root    /var/www/api.fotonatorte.ru/public;
+	index   index.php;
+
+	location ~.php$ {
+		fastcgi_pass 127.0.0.1:9000;
+		
+		fastcgi_index index.php;
+		
+		fastcgi_param SCRIPT_FILENAME /var/www/api.fotonatorte.ru/public/
+$fastcgi_script_name;
+
+		fastcgi_param PATH_INFO $fastcgi_script_name;  
+		fastcgi_param APPLICATION_ENV production;
+
+		include fastcgi_params;
+	}
+}
+		\end{lstlisting}}
+		
+		Параметр перенаправления к Fast-CGI \verb APPLICATION_ENV  устанавливает значение переменной окружения в зависимости от использования приложения может иметь следующие значения:
+		
+		\begin{description}
+			\item[development] -- разработка.		
+			\item[staging] -- тестирование.
+			\item[production] -- эксплуатация.
+		\end{description}
+		
+		Если все было установлено без ошибок то в ответ на пустой запрос к API будет выдан следующий ответ: 
+		
+		\tt{\begin{lstlisting}[caption={Ответ на запрос \tt{http://api.fotonatorte.ru/}}]
+{"errors":[{"message":"Unknown method calling","code":404}]}
+		\end{lstlisting}}
+		
+		\section*{Файлы конфигурации}
+		\addcontentsline{toc}{section}{Файлы конфигурации}	
+		
+		Параметры конфигурации REST-сервера и панели управления находятся в папке \tt{config} проекта сервера в файлах \tt{application.ini} и \tt{admin-panel.ini}.
+		
+			\subsection*{Настройки REST-сервера}
+			\addcontentsline{toc}{subsection}{Настройки REST-сервера}	
+
+		
+			\tt{\begin{lstlisting}[caption={Настройки REST-сервера}]
+	[production]
+
+	mongo.db = "cakes" # Database name
+
+	files.folder = "/var/db/www/files/" 				# Files folder 
+	files.url = "http://files.fotonatorte.ru/"	# Files folder url
+
+	[staging:production]
+
+	mongo.db = "test_cakes"
+
+	[development:production]
+
+	files.url = "http://files.fotonatorte.local/"
+			\end{lstlisting}}		
+		
+			Настройки устанавливают параметры REST сервера в зависимости от текущей переменной окружения. На данный момент файл настроек устанавливает следующие параметры: 
+		
+			\begin{description}
+				\item[mongo.db] -- Имя базы для работы.		
+				\item[files.folder] -- Папка для загрузки файлов.
+				\item[files.url] -- URL папки с файлами.
+			\end{description}
+		
+			\subsection*{Настройки панели управления}
+			\addcontentsline{toc}{subsection}{Настройки панели управления}	
+
+		
+			\tt{\begin{lstlisting}[caption={Настройки панели управления}]
+[production]
+
+app["site"]   = "http://fotonatorte.ru/"
+app["vk"]     = "http://fotonatorte.ru/vk.html"
+app["ok"]     = "http://fotonatorte.ru/ok.html"
+app["bakery"] = "http://fotonatorte.ru/bakery.html"
+
+role[0] = "Admin"
+role[1] = "Bakery"
+
+order_status[0] = "New"
+order_status[1] = "Approved"
+order_status[2] = "Declined"
+
+delivery_status[0] = "New"
+delivery_status[1] = "In progress"
+delivery_status[2] = "Ready"
+
+payment_status[0] = "New"
+payment_status[1] = "Paid"
+
+shape["round"] = "Round"
+shape["rect"] = "Rect"
+
+[staging:production]
+
+app["site"]   = "http://qa.fotonatorte.ru/"
+app["vk"]     = "http://qa.fotonatorte.ru/vk.html"
+app["ok"]     = "http://qa.fotonatorte.ru/ok.html"
+app["bakery"] = "http://qa.fotonatorte.ru/bakery.html"
+
+[development:production]
+
+app["site"]   = "http://fotonatorte.local/"
+app["vk"]     = "http://fotonatorte.local/vk.html"
+app["ok"]     = "http://fotonatorte.local/ok.html"
+app["bakery"] = "http://fotonatorte.local/bakery.html"
+			\end{lstlisting}}		
+		
+			Настройки панели управления содержат описание ссылок на различные типы приложения:
+			
+			\begin{itemize}
+				\item Сайт;	
+				\item Приложение во Вконтакте;				
+				\item Приложение в Одноклассах;		
+				\item Приложение для конкретной кондитерсокой.
+			\end{itemize}
+			
+			А также содержат таблицы сообвествия кодов сущностей с их именами в приложении.
+			
+\end{document}
+	
+	

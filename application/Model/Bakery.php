@@ -30,7 +30,12 @@ class Bakery extends User
         return array(
             'city' => City::NAME,
             'address' => 'string',
+            'contact_name' => 'string',
+            'contact_phone' => 'string',
+            'contact_email' => 'string',
+            'address' => 'string',
             'delivery_price' => 'float',
+            'cash_extra_charge'  => 'float',
             'decoration_prices' =>  array( 'type' => DecorationPrice::NAME,
                                            'relation' => MongoRecord::RELATION_MANY,
                                            'key_field' => 'decoration_id' ),
@@ -47,34 +52,52 @@ class Bakery extends User
     /**
      * @param \Model\City $city
      */
-    public function setCity(\Model\City $city)
-    {
-        $this->set('city', $city);
-    }
+    public function setCity(\Model\City $city){ $this->set('city', $city); }
 
     /**
      * @return \Model\City
      */
-    public function getCity()
-    {
-        return $this->get('city');
-    }
+    public function getCity() { return $this->get('city'); }
 
     /**
      * @param string $address
      */
-    public function setAddress($address)
-    {
-        $this->set('address', $address);
-    }
+    public function setAddress($address) { $this->set('address', $address); }
 
     /**
      * @return string
      */
-    public function getAddress()
-    {
-        return $this->get('address');
-    }
+    public function getAddress() { return $this->get('address'); }
+
+    /**
+     * @param string $name
+     */
+    public function setContactName($name) { $this->set('contact_name', $name); }
+
+    /**
+     * @return string
+     */
+    public function getContactName() { return $this->get('contact_name'); }
+
+    /**
+     * @param string $phone
+     */
+    public function setContactPhone($phone) { $this->set('contact_phone', $phone); }
+
+    /**
+     * @return string
+     */
+    public function getContactPhone() { return $this->get('contact_phone'); }
+
+    /**
+     * @param string $email
+     */
+    public function setContactEmail($email) { $this->set('contact_email', $email); }
+
+    /**
+     * @return string
+     */
+    public function getContactEmail() { return $this->get('contact_email'); }
 
     /**
      * @param float $deliveryPrice
@@ -90,6 +113,22 @@ class Bakery extends User
     public function getDeliveryPrice()
     {
         return $this->get('delivery_price');
+    }
+
+    /**
+     * @param float $cashExtraCharge
+     */
+    public function setCashExtraCharge($cashExtraCharge)
+    {
+        $this->set('cash_extra_charge', $cashExtraCharge);
+    }
+
+    /**
+     * @return float
+     */
+    public function getCashExtraCharge()
+    {
+        return $this->get('cash_extra_charge');
     }
 
     /**
@@ -123,5 +162,13 @@ class Bakery extends User
     public function removeDecorationPrice(DecorationPrice $decorationPrice)
     {
         $this->remove('decoration_prices', $decorationPrice);
+    }
+
+    /**
+     *
+     */
+    public function removeDecorationPrices()
+    {
+        $this->removeAll('decoration_prices');
     }
 }
