@@ -9,12 +9,13 @@ use PhotoCake\App\Config;
 class Cakes extends \Api\Resources\Resource
 {
     /**
+     * @param string $bakeryId
      * @param string $image
      * @param string $photo
      * @param \stdClass $markup
      * @return \Model\Cake
      */
-    public function createCake($image, $photo, \stdClass $markup)
+    public function createCake($bakeryId, $image, $photo, \stdClass $markup)
     {
         $cake = $this->createRecord(\Model\Cake::NAME);
         $cake->setImageUrl($this->saveImage('cake_image_', $image));
@@ -28,6 +29,7 @@ class Cakes extends \Api\Resources\Resource
         }
 
         $cake->setMarkup(json_encode($markup));
+        $cake->setBakeryId($bakeryId);
 
         return $cake;
     }
@@ -49,12 +51,15 @@ class Cakes extends \Api\Resources\Resource
 
     /**
      * @param int $count
+     * @param string $bakeryId
      * @return \Iterator
      */
-    public function getPromotedCakes($count)
+    public function getPromotedCakes($count, $bakeryId)
     {
-        return $this->getCollection('cakes')->fetchAll
-            (array( 'is_promoted' => true ), $count, 0, array( '_id' => -1 ));
+        return $this->getCollection('cakes')->fetchAll(array(
+            'is_promoted' => true,
+            'bakery_id' => $bakeryId
+        ), $count, 0, array( '_id' => -1 ));
     }
 
     /**

@@ -79,6 +79,8 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
 
         'client' => Client::NAME,
         'delivery' => Delivery::NAME,
+
+        'creation_time' => 'int',
     );
 
     /**
@@ -225,4 +227,21 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     {
         return $this->get('delivery');
     }
+
+    /**
+     * @param int $time
+     */
+    public function setCreationTime($time)
+    {
+        $this->set('creation_time', $time);
+    }
+
+    /**
+     * @return int
+     */
+    public function getCreationTime()
+    {
+        return $this->get('creation_time');
+    }
+
 }

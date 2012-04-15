@@ -17,7 +17,6 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
      */
     protected $collection = 'cakes';
 
-
     /**
      * @var array
      */
@@ -29,6 +28,7 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
         'dimension' => Dimension::NAME,
 
         'is_promoted' => 'boolean',
+        'bakery_id' => 'string',
     );
 
     /**
@@ -37,6 +37,22 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
     protected $spanFields = array(
         'orders' => array('image_url', 'photo_url', 'dimension', '_ref'),
     );
+
+    /**
+     * @param string $bakeryId
+     */
+    public function setBakeryId($bakeryId)
+    {
+        $this->set('bakery_id', $bakeryId);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBakeryId()
+    {
+        return $this->get('bakery_id');
+    }
 
     /**
      * @param string $markup

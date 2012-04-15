@@ -20,6 +20,7 @@ class Orders extends \Api\Resources\Resource
         $order->setStatus(Order::ORDER_NEW);
         $order->setDeliveryStatus(Order::DELIVERY_NEW);
         $order->setPaymentStatus(Order::PAYMENT_NEW);
+        $order->setCreationTime(time());
 
         return $order;
     }
