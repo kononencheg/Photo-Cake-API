@@ -78,6 +78,15 @@ class Users extends \Api\Resources\Resource
 
     /**
      * @param \Model\User $user
+     * @param string $password
+     */
+    public function changePassword(\Model\User $user, $password)
+    {
+        $user->setPassword($this->saltPassword($password));
+    }
+
+    /**
+     * @param \Model\User $user
      * @return \Model\User
      */
     public function signIn(\Model\User $user)

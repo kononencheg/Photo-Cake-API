@@ -45,6 +45,7 @@ class MethodFactory implements \PhotoCake\Api\Method\MethodFactoryInterface
             case 'users.getCurrent': return new Users\GetCurrent();
             case 'users.getBakeries': return new Users\GetBakeries();
 
+            case 'users.changePassword': return new Users\ChangePassword();
             case 'users.editBakery': return new Users\EditBakery();
             case 'users.editBakeryDecorations':
                 return new Users\EditBakeryDecorations();
