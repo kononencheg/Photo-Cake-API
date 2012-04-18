@@ -26,6 +26,8 @@ class Add extends \PhotoCake\Api\Method\Method
         'recipe_id' => array( Filter::STRING, array( null => 'Ошибка выбора рецепта.' ) ),
         'cake_id'   => array( Filter::STRING, array( null => 'Подождите пока загрузится торт.' ) ),
 
+        'partner_id'   => array( Filter::STRING ),
+
         'client_email'   => array( Filter::EMAIL/*,  array( null => 'Email не задан.', false => 'Email введен не правильно.' )*/ ),
         'client_phone'   => array( Filter::PHONE,  array( null => 'Телефон не задан.', false => 'Телефон введен неправильно.' ) ),
         'client_name'    => array( Filter::STRING, array( null => 'Имя не задано.' ) ),
@@ -92,9 +94,10 @@ class Add extends \PhotoCake\Api\Method\Method
 
         $orders = Orders::getInstance();
         $cakes = Cakes::getInstance();
+        $users = Users::getInstance();
 
         $recipe = Recipes::getInstance()->getById($this->getParam('recipe_id'));
-        $bakery = Users::getInstance()->getById($this->getParam('bakery_id'));
+        $bakery = $users->getById($this->getParam('bakery_id'));
         $cake = $cakes->getById($this->getParam('cake_id'));
 
         if ($this->getParam('delivery_address') === 'to title') {
@@ -123,13 +126,27 @@ class Add extends \PhotoCake\Api\Method\Method
                 $order->setPayment
                     ($this->createPayment($bakery, $cake, $recipe, $delivery));
 
-                $orders->saveOrder($order);
-                $orders->emailOrder($order);
+                $partnerId = $this->getParam('partner_id');
+                if ($partnerId !== null) {
+                    $partner = $users->getById($partnerId);
 
-                $result = $order->jsonSerialize();
+                    if ($partner !== null) {
+                        $order->setPartner($partner);
+                    } else {
+                        $this->response
+                             ->addError('Неизвестный партнер.', 100);
+                    }
+                }
+
+                if (!$this->response->hasErrors()) {
+                    $orders->saveOrder($order);
+                    $orders->emailOrder($order);
+
+                    $result = $order->jsonSerialize();
+                }
             } else {
                 $this->response
-                    ->addError('Ошибка обработки данных заказа.', 100);
+                     ->addError('Ошибка обработки данных заказа.', 100);
             }
         }
 
@@ -192,8 +209,7 @@ class Add extends \PhotoCake\Api\Method\Method
         $client = Clients::getInstance()->createClient(
             $this->getParam('client_email'),
             $this->getParam('client_name'),
-            $this->getParam('client_phone'),
-            $this->getParam('client_network')
+            $this->getParam('client_phone')
         );
 
         return $client;

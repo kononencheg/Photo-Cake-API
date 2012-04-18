@@ -8,17 +8,14 @@ class Clients extends \Api\Resources\Resource
      * @param string $email
      * @param string $name
      * @param string $phone
-     * @param int $network
-     * @param string $networkId
      * @return \Model\Client
      */
-    public function createClient($email, $name, $phone, $network)
+    public function createClient($email, $name, $phone)
     {
         $client = $this->createRecord(\Model\Client::NAME);
         $client->setEmail($email);
         $client->setName($name);
         $client->setPhone($phone);
-        $client->setNetwork($network);
 
         return $client;
     }

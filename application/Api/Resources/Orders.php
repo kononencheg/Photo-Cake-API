@@ -56,14 +56,18 @@ class Orders extends \Api\Resources\Resource
 
     /**
      * @param string $bakeryId
+     * @param string $partnerId
      * @return \Iterator
      */
-    public function getBakeryOrders($bakeryId)
+    public function getBakeryOrders($bakeryId, $partnerId)
     {
+        $query = array( 'bakery._ref' => new \MongoId($bakeryId) );
+        if ($partnerId !== null) {
+            $query['partner._ref'] = new \MongoId($partnerId);
+        }
+
         return $this->getCollection('orders')->fetchAll(
-            array( 'bakery._ref' => new \MongoId($bakeryId) ),
-            null, null,
-            array( '_id' => -1 )
+            $query,  null, null, array( '_id' => -1 )
         );
     }
 

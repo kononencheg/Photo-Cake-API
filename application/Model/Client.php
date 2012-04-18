@@ -41,17 +41,7 @@ class Client extends \PhotoCake\Db\Mongo\MongoRecord
 
         'email' => 'string',
         'phone' => 'string',
-
-        'network' => 'int',
     );
-
-    /**
-     * @var array
-     */
-    protected $spanFields = array(
-        'orders' => array( 'name', 'email', 'phone' ),
-    );
-
 
     /**
      * @param string $email
@@ -83,22 +73,6 @@ class Client extends \PhotoCake\Db\Mongo\MongoRecord
     public function getName()
     {
         return $this->get('name');
-    }
-
-    /**
-     * @param int $network
-     */
-    public function setNetwork($network)
-    {
-        $this->set('network', $network);
-    }
-
-    /**
-     * @return int
-     */
-    public function getNetwork()
-    {
-        return $this->get('network');
     }
 
     /**

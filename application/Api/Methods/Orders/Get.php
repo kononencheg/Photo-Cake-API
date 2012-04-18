@@ -15,22 +15,26 @@ class Get extends \PhotoCake\Api\Method\Method
     /**
      * @var array
      */
-    protected $accessList = array( User::ROLE_ADMIN, User::ROLE_BAKERY );
+    protected $accessList = array( User::ROLE_ADMIN, User::ROLE_BAKERY, User::ROLE_PARTNER );
 
     /**
      * @var array
      */
     protected $arguments = array(
-        'bakery_id' => array( Filter::STRING, array( null => 'Идентификатор кондитерской не задан.' ) )
+        'bakery_id' => array( Filter::STRING, array( null => 'Идентификатор кондитерской не задан.' ) ),
+        'partner_id' => array( Filter::STRING ),
     );
 
     protected function prepare()
     {
         $users = Users::getInstance();
+        $role = $users->getCurrentRole();
 
-    	if ($users->getCurrentRole() === User::ROLE_BAKERY) {
+    	if ($role === User::ROLE_BAKERY) {
  			$this->setParam('bakery_id', $users->getCurrentUserId());
-    	}
+    	} elseif ($role === User::ROLE_PARTNER) {
+            $this->setParam('partner_id', $users->getCurrentUserId());
+        }
     }
 
     /**
@@ -41,7 +45,7 @@ class Get extends \PhotoCake\Api\Method\Method
         $result = array();
 
         $list = Orders::getInstance()->getBakeryOrders
-                                            ($this->getParam('bakery_id'));
+                ($this->getParam('bakery_id'), $this->getParam('partner_id'));
 
         foreach ($list as $record) {
             array_push($result, $record->jsonSerialize());

@@ -6,7 +6,7 @@ use PhotoCake\Db\Mongo\MongoRecord;
 
 use Model\DecorationPrice;
 
-class Bakery extends User
+class Bakery extends Partner
 {
     /**
      * @const

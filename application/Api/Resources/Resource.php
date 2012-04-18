@@ -34,7 +34,7 @@ class Resource implements \PhotoCake\Api\Resource\ResourceInterface
 
     /**
      * @param $name
-     * @return \Model\Admin|\Model\Bakery|\Model\Cake|\Model\City|\Model\Client|\Model\Decoration|\Model\DecorationPrice|\Model\Delivery|\Model\Dimension|\Model\DimensionPrice|\Model\Order|\Model\Payment|\Model\Recipe|null|\PhotoCake\Db\Record\RecordInterface
+     * @return \Model\Admin|\Model\Bakery|\Model\Partner|\Model\Cake|\Model\City|\Model\Client|\Model\Decoration|\Model\DecorationPrice|\Model\Delivery|\Model\Dimension|\Model\DimensionPrice|\Model\Order|\Model\Payment|\Model\Recipe|null|\PhotoCake\Db\Record\RecordInterface
      */
     protected function createRecord($name)
     {

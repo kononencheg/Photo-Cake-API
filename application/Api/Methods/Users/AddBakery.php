@@ -9,13 +9,12 @@ use Model\User;
 
 use PhotoCake\Api\Arguments\Filter;
 
-class AddBakery extends AddAdmin
+class AddBakery extends AddPartner
 {
     protected function extendArguments()
     {
         return array(
-            'city_id' => array( Filter::STRING,  array( null => 'Город не задан.' ) ),
-            'delivery_price' => array( Filter::FLOAT, array( null => 'Цена доставки не задана.' ) ),
+            'city_id' => array( Filter::STRING,  array( null => 'Город не задан.' ) )
         );
     }
 
@@ -30,7 +29,7 @@ class AddBakery extends AddAdmin
                 $this->getParam('name'),
                 $this->getParam('email'),
                 $this->getParam('password'),
-                $this->getParam('delivery_price')
+                $this->getParam('url')
             );
 
             $user->setCity($city);

@@ -23,18 +23,37 @@ class Users extends \Api\Resources\Resource
     }
 
     /**
+     * @param string $name
      * @param string $email
      * @param string $password
-     * @param float $deliveryPrice
+     * @param float $url
      * @return \Model\Bakery
      */
-    public function createBakery($name, $email, $password, $deliveryPrice)
+    public function createBakery($name, $email, $password, $url)
     {
         $user = $this->createRecord(\Model\Bakery::NAME);
         $user->setPassword($this->saltPassword($password));
         $user->setEmail($email);
         $user->setName($name);
-        $user->setDeliveryPrice($deliveryPrice);
+        $user->setUrl($url);
+
+        return $user;
+    }
+
+    /**
+     * @param string $name
+     * @param string $email
+     * @param string $password
+     * @param string $url
+     * @return \Model\Partner
+     */
+    public function createPartner($name, $email, $password, $url)
+    {
+        $user = $this->createRecord(\Model\Partner::NAME);
+        $user->setPassword($this->saltPassword($password));
+        $user->setEmail($email);
+        $user->setName($name);
+        $user->setUrl($url);
 
         return $user;
     }

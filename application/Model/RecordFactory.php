@@ -13,6 +13,7 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
             Cake::NAME => true,
             Admin::NAME => true,
             Bakery::NAME => true,
+            Partner::NAME => true,
             City::NAME => true,
             Order::NAME => true,
             Recipe::NAME => true,
@@ -66,6 +67,7 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
 
             case Admin::NAME: $result = new Admin(); break;
             case Bakery::NAME: $result = new Bakery(); break;
+            case Partner::NAME: $result = new Partner(); break;
 
             case City::NAME: $result = new City(); break;
             case Cake::NAME: $result = new Cake(); break;
@@ -98,6 +100,7 @@ class RecordFactory implements \PhotoCake\Db\Record\RecordFactoryInterface
         switch ($role) {
             case User::ROLE_ADMIN: return new Admin();
             case User::ROLE_BAKERY: return new Bakery();
+            case User::ROLE_PARTNER: return new Partner();
         }
 
         return null;

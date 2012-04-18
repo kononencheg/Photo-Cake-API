@@ -71,16 +71,17 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
         'payment_status' => 'int',
         'delivery_status' => 'int',
 
+        'creation_time' => 'int',
+
         'bakery' => Bakery::NAME,
         'recipe' => Recipe::NAME,
         'cake' => Cake::NAME,
 
         'payment'  => Payment::NAME,
-
         'client' => Client::NAME,
         'delivery' => Delivery::NAME,
 
-        'creation_time' => 'int',
+        'partner' => Partner::NAME,
     );
 
     /**
@@ -242,6 +243,22 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     public function getCreationTime()
     {
         return $this->get('creation_time');
+    }
+
+    /**
+     * @param \Model\Partner
+     */
+    public function setPartner(Partner $partner)
+    {
+        $this->set('partner', $partner);
+    }
+
+    /**
+     * @return \Model\Partner
+     */
+    public function getPartner()
+    {
+        return $this->get('partner');
     }
 
 }

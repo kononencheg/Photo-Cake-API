@@ -25,6 +25,12 @@ abstract class User extends MongoRecord
     const ROLE_BAKERY = 1;
 
     /**
+     * @const
+     * @var int
+     */
+    const ROLE_PARTNER = 2;
+
+    /**
      * @var string
      */
     protected $collection = 'users';
