@@ -30,10 +30,10 @@ class Bakery extends Partner
         return array(
             'city' => City::NAME,
             'address' => 'string',
+            'phone' => 'string',
             'contact_name' => 'string',
             'contact_phone' => 'string',
             'contact_email' => 'string',
-            'address' => 'string',
             'delivery_price' => 'float',
             'cash_extra_charge'  => 'float',
             'decoration_prices' =>  array( 'type' => DecorationPrice::NAME,
@@ -68,6 +68,16 @@ class Bakery extends Partner
      * @return string
      */
     public function getAddress() { return $this->get('address'); }
+
+    /**
+     * @param string $phone
+     */
+    public function setPhone($phone) { $this->set('phone', $phone); }
+
+    /**
+     * @return string
+     */
+    public function getPhone() { return $this->get('phone'); }
 
     /**
      * @param string $name
