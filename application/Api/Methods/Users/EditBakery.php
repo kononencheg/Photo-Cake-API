@@ -22,6 +22,7 @@ class EditBakery extends \PhotoCake\Api\Method\Method
             'contact_phone' => array( Filter::PHONE ),
             'contact_email' => array( Filter::EMAIL ),
 
+            'phone' => array( Filter::PHONE, array( null => 'Телефон не задан.' ) ),
             'address' => array( Filter::STRING, array( null => 'Адрес самовывоза не задан.' ) ),
             'delivery_price' => array( Filter::FLOAT, array( null => 'Цена доставки не задана.' ) ),
             'cash_extra_charge' => array( Filter::FLOAT, array( null => 'Наценка за наличную оплату не задана.' ) ),
@@ -47,6 +48,7 @@ class EditBakery extends \PhotoCake\Api\Method\Method
             $bakery->setContactPhone($this->getParam('contact_name'));
             $bakery->setContactEmail($this->getParam('contact_email'));
 
+            $bakery->setPhone($this->getParam('phone'));
             $bakery->setAddress($this->getParam('address'));
             $bakery->setDeliveryPrice($this->getParam('delivery_price'));
             $bakery->setCashExtraCharge($this->getParam('cash_extra_charge'));
