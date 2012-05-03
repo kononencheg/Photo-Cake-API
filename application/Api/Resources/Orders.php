@@ -121,13 +121,14 @@ class Orders extends \Api\Resources\Resource
         $payment = $order->getPayment();
         $cake = $order->getCake();
         $client = $order->getClient();
+        $bakery = $order->getBakery();
 
         return '<html>
             <head>
                 <title>Новый Заказ</title>
             </head>
             <body>
-                <h1>Заказ ' . $order->getId() . '</h1>
+                <h1>Заказ №' . $order->getIndex() . ' <small>' . $bakery->getName() . '</small></h1>
 
                 <p> Вы заказли торт с помощью приложения Фото На Торте! Спасибо
                     вам огромное! Надеемся, что вам понравится! </p>

@@ -28,6 +28,7 @@ class Bakery extends Partner
     protected function extendOptions()
     {
         return array(
+            'last_order_index' => 'int',
             'city' => City::NAME,
             'address' => 'string',
             'phone' => 'string',
@@ -48,6 +49,25 @@ class Bakery extends Partner
     protected $spanFields = array(
         'orders' => array('city', 'address', 'delivery_price', '_ref'),
     );
+
+    /**
+     * @return int
+     */
+    public function getLastOrderIndex() {
+        $index = $this->get('last_order_index');
+        if ($index === null) {
+            return 0;
+        }
+
+        return $index;
+    }
+
+    /**
+     *
+     */
+    public function incrementLastOrderIndex() {
+        $this->increment('last_order_index');
+    }
 
     /**
      * @param \Model\City $city

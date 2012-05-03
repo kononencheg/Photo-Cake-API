@@ -119,6 +119,9 @@ class Add extends \PhotoCake\Api\Method\Method
                 $delivery = $this->createDelivery();
 
                 $order->setBakery($bakery);
+                $order->setIndex($bakery->getLastOrderIndex());
+                $bakery->incrementLastOrderIndex();
+
                 $order->setRecipe($recipe);
                 $order->setCake($cake);
                 $order->setClient($this->createClient());
@@ -140,6 +143,8 @@ class Add extends \PhotoCake\Api\Method\Method
 
                 if (!$this->response->hasErrors()) {
                     $orders->saveOrder($order);
+                    $users->saveUser($bakery);
+
                     $orders->emailOrder($order);
 
                     $result = $order->jsonSerialize();

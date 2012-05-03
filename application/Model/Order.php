@@ -67,6 +67,8 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
      * @var array
      */
     protected $options = array(
+        'index' => 'int',
+
         'status' => 'int',
         'payment_status' => 'int',
         'delivery_status' => 'int',
@@ -130,6 +132,22 @@ class Order extends \PhotoCake\Db\Mongo\MongoRecord
     public function getClient()
     {
         return $this->get('client');
+    }
+
+    /**
+     * @param int $index
+     */
+    public function setIndex($index)
+    {
+        $this->set('index', $index);
+    }
+
+    /**
+     * @return int
+     */
+    public function getIndex()
+    {
+        return $this->get('index');
     }
 
     /**
