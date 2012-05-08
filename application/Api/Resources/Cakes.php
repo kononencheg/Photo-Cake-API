@@ -57,9 +57,32 @@ class Cakes extends \Api\Resources\Resource
     public function getPromotedCakes($count, $bakeryId)
     {
         return $this->getCollection('cakes')->fetchAll(array(
-            'is_promoted' => true,
+            'promoted_index' => array( '$exists' => true ),
             'bakery_id' => $bakeryId
-        ), $count, 0, array( '_id' => -1 ));
+        ), $count, 0, array( 'promoted_index' => 1 ));
+    }
+
+
+    /**
+     * @param \Model\Cake $cake
+     * @param int $index
+     */
+    public function addPromotedCake(Cake $cake, $index) {
+        if ($cake->getPhotoUrl() !== null) {
+            $markup = json_decode($cake->getMarkup());
+            $markup->content->photo->image_source = 'network';
+            $markup->content->photo->photo_url = $cake->getPhotoUrl();
+
+            $cake->setMarkup(json_encode($markup));
+        }
+
+        $this->getCollection('cakes')->removeAll(array(
+            'promoted_index' => $index,
+            'bakery_id' => $cake->getBakeryId()
+        ));
+
+        $cake->setPromotedIndex($index);
+        $this->saveCake($cake);
     }
 
     /**

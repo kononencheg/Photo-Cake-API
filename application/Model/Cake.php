@@ -27,7 +27,7 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
         'photo_url' => 'string',
         'dimension' => Dimension::NAME,
 
-        'is_promoted' => 'boolean',
+        'promoted_index' => 'int',
         'bakery_id' => 'string',
     );
 
@@ -119,18 +119,18 @@ class Cake extends \PhotoCake\Db\Mongo\MongoRecord
     }
 
     /**
-     * @param boolean $isPromoted
+     * @param int $isPromoted
      */
-    public function setPromoted($isPromoted)
+    public function setPromotedIndex($isPromoted)
     {
-        $this->set('is_promoted', $isPromoted);
+        $this->set('promoted_index', $isPromoted);
     }
 
     /**
-     * @return boolean
+     * @return int
      */
-    public function isPromoted()
+    public function getPromotedIndex()
     {
-        return $this->get('is_promoted');
+        return $this->get('promoted_index');
     }
 }

@@ -100,18 +100,14 @@ class Add extends \PhotoCake\Api\Method\Method
         $bakery = $users->getById($this->getParam('bakery_id'));
         $cake = $cakes->getById($this->getParam('cake_id'));
 
-        if ($this->getParam('delivery_address') === 'to title') {
+        if (stripos($this->getParam('delivery_address'), 'to title:') === 0) {
+            $titleAddress =
+                explode('to title:', $this->getParam('delivery_address'));
 
-            if ($cake->getPhotoUrl() !== null) {
-                $markup = json_decode($cake->getMarkup());
-                $markup->content->photo->image_source = 'network';
-                $markup->content->photo->photo_url = $cake->getPhotoUrl();
-
-                $cake->setMarkup(json_encode($markup));
+            $index = $titleAddress[1];
+            if ($index !== null) {
+                $cakes->addPromotedCake($cake, (int) $index);
             }
-
-            $cake->setPromoted(true);
-            $cakes->saveCake($cake);
 
         } else {
             if ($recipe !== null && $cake !== null && $bakery !== null) {
